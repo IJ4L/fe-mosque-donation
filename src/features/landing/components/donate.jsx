@@ -1,12 +1,7 @@
 const Donate = () => {
   return (
-    <section className="w-full h-fit">
-      <div className="bg-primary-700/20">
-        <div>
-          <img src="" alt="" />
-          <p></p>
-        </div>
-      </div>
+    <section className="w-full h-screen">
+      <div className="w-full h-full bg-primary-700"></div>
     </section>
   );
 };

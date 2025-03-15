@@ -1,2 +1,2 @@
-![Alt Text](thumbnail.png)
+![Alt Text](public/thumbnail.png)
 

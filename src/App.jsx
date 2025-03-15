@@ -5,7 +5,7 @@ import Kas from "./features/landing/components/kas";
 
 function App() {
   return (
-    <div className="h-screen">
+    <div>
       <LandingNavigation />
       <Hero />
       <Kas />
@@ -15,3 +15,4 @@ function App() {
 }
 
 export default App;
+
