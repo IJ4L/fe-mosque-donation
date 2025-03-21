@@ -10,6 +10,7 @@ const Hero = () => {
           className="size-2/3"
           src={IconIllustration}
           alt="illustration.svg"
+          loading="lazy"
         />
       </div>
       <div>
@@ -23,6 +24,7 @@ const Hero = () => {
             className="size-3/5 xl:size-4/5"
             src={ImageMosque}
             alt="mosque.png"
+            loading="lazy"
           />
         </div>
       </div>

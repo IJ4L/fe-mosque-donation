@@ -22,5 +22,5 @@ const Kas = () => {
     </section>
   );
 };
-
+ 
 export default Kas;
