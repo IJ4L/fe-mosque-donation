@@ -10,10 +10,10 @@ const TopDonation = () => {
         loading="lazy"
       />
       <div className="w-full h-full flex flex-col items-center justify-center md:py-10 xl:py-15 2xl:py-36">
-        <h1 className="font-semibold text-3xl">
+        <h1 className="font-semibold text-xl lg:text-3xl">
           Papan Peringkat Donasi Tertinggi
         </h1>
-        <p className="text-center mt-2">
+        <p className="text-center px-4 xl:px-0 mt-2">
           Menampilkan daftar nama para donatur dengan kontribusi sebagai bentuk
           apresiasi <br /> bagi jamaah untuk lebih giat bersedekah dalam
           mendukung kegiatan masjid.
