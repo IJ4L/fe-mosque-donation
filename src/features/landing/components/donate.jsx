@@ -3,7 +3,7 @@ import ImageFlower from "../../../assets/images/img_flower.svg";
 
 const Donate = () => {
   return (
-    <div className="h-screen md:h-[550px] xl:h-[700px] 2xl:h-[800px] w-full mt-56 md:mt-0 px-8 md:px-20 xl:px-40 2xl:px-64 pb-10">
+    <div className="md:h-[550px] xl:h-[700px] 2xl:h-[800px] w-full mt-56 md:mt-0 px-8 md:px-20 xl:px-40 2xl:px-64">
       <div className="relative w-full bg-primary-700/10 rounded-2xl">
         <div className="flex flex-col md:flex-row z-10 px-8 md:px-16 py-10 md:space-x-10">
           <div className="flex flex-col md:w-1/2">
