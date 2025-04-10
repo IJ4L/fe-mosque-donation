@@ -20,7 +20,7 @@ const TopDonation = () => {
           kegiatan masjid.
         </p>
         <ul className="w-full flex flex-col items-center justify-center md:mt-6 xl:mt-12 space-y-4 mt-6">
-          <li className="flex justify-center items-center gap-2 py-2 md:py-3 xl:py-4 w-11/12 md:w-2/3 lg:w-1/3 bg-primary-700 border border-primary-700 rounded-lg shadow-sm">
+          <li className="flex justify-center items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 bg-primary-700 border border-primary-700 rounded-lg shadow-sm">
             <img className="size-7" src={IconCrown} alt="ic_crown.svg" />
             <p className="font-medium text-white text-sm md:text-base">
               Lutfi Halimawan
@@ -29,7 +29,7 @@ const TopDonation = () => {
           {[...Array(4)].map((_, index) => (
             <li
               key={index}   
-              className="flex justify-center py-2 md:py-3 xl:py-4 w-11/12 md:w-2/3 lg:w-1/3 bg-white border border-primary-700 rounded-lg shadow-sm text-sm md:text-base"
+              className="flex justify-center py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 bg-white border border-primary-700 rounded-lg shadow-sm text-sm md:text-base"
             >
               Lutfi Halimawan
             </li>
