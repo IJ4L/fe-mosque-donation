@@ -4,6 +4,7 @@ import Hero from "./features/landing/components/hero";
 import Kas from "./features/landing/components/cash";
 import TopDonation from "./features/landing/components/top_donation";
 import News from "./features/landing/components/news";
+import Footer from "./components/ui/footer";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Donate />
       <TopDonation />
       <News />
+      <Footer />
     </div>
   );
 }
