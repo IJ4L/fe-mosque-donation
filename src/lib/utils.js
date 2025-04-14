@@ -9,3 +9,61 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
+
+// Image optimization utilities
+export function getImageUrl(imagePath, size = 'default') {
+  // Get base URL from environment or use default
+  const baseUrl = import.meta.env.VITE_CDN_URL || '';
+  
+  // Size mappings for responsive images
+  const sizes = {
+    small: '300w',
+    medium: '600w',
+    large: '1200w',
+    default: ''
+  };
+  
+  // If we have a CDN, use it with size parameter
+  if (baseUrl) {
+    const sizeParam = sizes[size] ? `?size=${sizes[size]}` : '';
+    return `${baseUrl}${imagePath}${sizeParam}`;
+  }
+  
+  // Otherwise just return the local path
+  return imagePath;
+}
+
+// Format currency for better rendering performance
+export function formatCurrency(amount) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+// Debounce function for performance-heavy handlers
+export function debounce(func, wait = 300) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Memoize expensive calculations
+export function memoize(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}

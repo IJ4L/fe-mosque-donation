@@ -3,7 +3,7 @@ import { InstagramLogoIcon } from "@radix-ui/react-icons";
 
 const Footer = () => {
   return (
-    <footer className="mt-28">
+    <footer id="kontak" className="mt-28">
       <div className="flex flex-col space-y-4 md:flex-row md:gap-20 2xl:gap-0 justify-between bg-black-600 py-14 px-8 md:px-20 xl:px-40 2xl:px-64">
         <div className="">
           <div className="flex items-center space-x-2">
@@ -40,8 +40,10 @@ const Footer = () => {
           ></iframe>
         </div>
       </div>
-      <div className="flex justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-64 bg-black text-white">
-        <p>© 2023 Masjid Ibnu Sina. All rights reserved.</p>
+      <div className="flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-64 space-y-3 md:space-y-0 bg-black text-white">
+        <p className="text-center md:text-start">
+          © 2023 Masjid Ibnu Sina. All rights reserved.
+        </p>
         <p className="hover:underline cursor-pointer">Privacy Policy</p>
       </div>
     </footer>

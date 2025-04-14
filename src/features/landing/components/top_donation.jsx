@@ -1,9 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
 import ImageIslamic from "../../../assets/images/img_islamic.svg";
 import IconCrown from "../../../assets/icons/ic_crown.svg";
+import { fetchTopDonations } from "../api/donations";
 
-const TopDonation = () => {
+function TopDonation() {
+  // Use the useQuery hook to fetch data
+  const {
+    isPending,
+    error,
+    data: donations,
+  } = useQuery({
+    queryKey: ["topDonations"],
+    queryFn: fetchTopDonations,
+  });
+
   return (
-    <div className="relative w-full flex items-center justify-center mt-0 md:mt-20 xl:mt-0 px-4">
+    <div
+      id="peringkat-donasi"
+      className="relative w-full flex items-center justify-center mt-0 md:mt-20 xl:mt-0 px-4"
+    >
       <img
         className="hidden md:flex absolute top-0 left-0 right-0 bottom-0 -z-10 object-cover w-full h-full"
         src={ImageIslamic}
@@ -19,25 +34,38 @@ const TopDonation = () => {
           apresiasi bagi jamaah untuk lebih giat bersedekah dalam mendukung
           kegiatan masjid.
         </p>
-        <ul className="w-full flex flex-col items-center justify-center md:mt-6 xl:mt-12 space-y-4 mt-6">
-          <li className="flex justify-center items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 bg-primary-700 border border-primary-700 rounded-lg shadow-sm">
-            <img className="size-7" src={IconCrown} alt="ic_crown.svg" />
-            <p className="font-medium text-white text-sm md:text-base">
-              Lutfi Halimawan
-            </p>
-          </li>
-          {[...Array(4)].map((_, index) => (
-            <li
-              key={index}   
-              className="flex justify-center py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 bg-white border border-primary-700 rounded-lg shadow-sm text-sm md:text-base"
-            >
-              Lutfi Halimawan
-            </li>
-          ))}
-        </ul>
+
+        {isPending ? (
+          <div className="mt-6">Memuat data donasi...</div>
+        ) : error ? (
+          <div className="mt-6 text-red-500">Error: {error.message}</div>
+        ) : (
+          <ul className="w-full flex flex-col items-center justify-center md:mt-6 xl:mt-12 space-y-4 mt-6">
+            {donations.map((donation, index) => (
+              <li
+                key={donation.id}
+                className={`flex justify-between items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 ${
+                  index === 0
+                    ? "bg-primary-700 border border-primary-700 text-white"
+                    : "bg-white border border-primary-700"
+                } rounded-lg shadow-sm px-4`}
+              >
+                {index === 0 && (
+                  <img className="size-7" src={IconCrown} alt="ic_crown.svg" />
+                )}
+                <p className="font-medium text-sm md:text-base">
+                  {donation.name}
+                </p>
+                <p className="text-sm md:text-base font-semibold">
+                  Rp {donation.amount.toLocaleString("id-ID")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
-};
+}
 
 export default TopDonation;

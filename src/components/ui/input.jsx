@@ -1,19 +1,37 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const Input = React.forwardRef(({ className, type, ...props }, ref) => {
-  return (
-    <input
-      type={type}
-      className={cn(
-        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+const variantClasses = {
+  default: "bg-slate-50 text-black",
+  error: "border-red-500 bg-red-100 text-red-900",
+};
+
+const Input = React.forwardRef(
+  ({ className, variant, type, label, isRequired, isLabel, ...props }, ref) => {
+    return (
+      <div className={cn("flex mb-4", className)}>
+        <div>
+          <label className="font-semibold" htmlFor="">
+            {label}
+          </label>
+          {isRequired == "true" && (
+            <span className="text-red-500 text-sm ml-1">*</span>
+          )}
+        </div>
+        <input
+          type={type}
+          className={cn(
+            "flex h-12 w-full rounded-lg px-3 py-2 text-sm placeholder:text-black-600",
+            variantClasses[variant || "default"]
+          )}
+          ref={ref}
+          {...props}
+        />
+      </div>
+    );
+  }
+);
+
 Input.displayName = "Input";
 
 export { Input };

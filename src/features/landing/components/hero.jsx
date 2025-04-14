@@ -4,7 +4,10 @@ import ImageMosque from "../../../assets/images/img_mosque.svg";
 
 const Hero = () => {
   return (
-    <main className="relative -z-10 w-full xl:h-screen bg-linear-to-tl from-primary-700 to-white">
+    <main
+      id="beranda"
+      className="relative -z-10 w-full xl:h-screen bg-linear-to-tl from-primary-700 to-white"
+    >
       <div className="absolute">
         <img
           className="size-2/3"

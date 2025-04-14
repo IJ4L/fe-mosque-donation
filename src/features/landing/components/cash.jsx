@@ -1,6 +1,7 @@
 const Kas = () => {
   return (
     <section
+      id="kas-masjid"
       className="
         flex flex-col md:flex-row h-60 mt-8 mb-8 md:mb-0 md:mt-18 
         xl:mt-20 2xl:mt-24 mx-8 md:mx-20 xl:mx-40 2xl:mx-64 

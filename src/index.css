@@ -1,16 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+/* Load only the fonts needed with optimized font-display property */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap&text=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,/()%&-:;?![]{}#@$^*+=_<>~'\"&display=swap");
 @import "tailwindcss";
 
 @theme {
   --color-primary-600: #01e871;
   --color-primary-700: #019348;
-  --color-secondary-700: #feb358;
+  --color-secondary-600: #feb358;
   --color-secondary-700: #fe9c25;
   --color-black-600: #121514;
+  --color-grey-0: #deefe7;
+}
+
+/* Font display settings for better performance */
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* This improves render performance */
+  src: local("Poppins");
 }
 
 :root {
   scroll-behavior: smooth;
-  font-family: "Poppins", sans-serif;
+  font-family:
+    "Poppins",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   color: var(--color-black);
 }
