@@ -44,7 +44,7 @@ function TopDonation() {
             {donations.map((donation, index) => (
               <li
                 key={donation.id}
-                className={`flex justify-between items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 ${
+                className={`flex justify-center items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 ${
                   index === 0
                     ? "bg-primary-700 border border-primary-700 text-white"
                     : "bg-white border border-primary-700"
@@ -55,9 +55,6 @@ function TopDonation() {
                 )}
                 <p className="font-medium text-sm md:text-base">
                   {donation.name}
-                </p>
-                <p className="text-sm md:text-base font-semibold">
-                  Rp {donation.amount.toLocaleString("id-ID")}
                 </p>
               </li>
             ))}
