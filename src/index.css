@@ -11,12 +11,11 @@
   --color-grey-0: #deefe7;
 }
 
-/* Font display settings for better performance */
 @font-face {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-display: swap; /* This improves render performance */
+  font-display: swap;
   src: local("Poppins");
 }
 

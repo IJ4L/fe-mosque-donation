@@ -7,7 +7,17 @@ import compressionPlugin from 'vite-plugin-compression'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(), 
+    react({
+      // Add specific configurations for React plugin to improve HMR
+      fastRefresh: true,
+      babel: {
+        plugins: [],
+        // Ensure consistent component exports for better HMR
+        parserOpts: {
+          plugins: ['jsx']
+        }
+      }
+    }), 
     tailwindcss(),
     compressionPlugin({
       algorithm: 'gzip', // Use gzip compression
