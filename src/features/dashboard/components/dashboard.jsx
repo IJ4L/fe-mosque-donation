@@ -66,7 +66,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-2 mt-4">
           <button className="bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer mt-4">
             Sebelumnya
           </button>

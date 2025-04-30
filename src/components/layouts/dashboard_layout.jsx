@@ -1,12 +1,20 @@
 import Dashboard from "@/features/dashboard/components/dashboard";
 import IconLogo from "../../assets/icons/ic_logo.svg";
-import { useState } from "react";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
 import Profile from "@/features/dashboard/components/profile";
+import { Sheet } from "../ui/sheet";
+import { useState } from "react";
+import {
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "../ui/sheet";
 
 const DashboardLayout = () => {
   const [section, setSection] = useState("Dashboard");
+  const [open, setOpen] = useState(false);
   function handleSectionChange(newSection) {
     setSection(newSection);
   }
@@ -34,10 +42,10 @@ const DashboardLayout = () => {
           </button>
         </div>
         <div>
-          <div className="flex gap-2 items-center mt-2">
+          <div className="md:w-fit grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
             <button
               className={
-                "w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
+                "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
                 (section === "Dashboard"
                   ? "bg-primary-600"
                   : "bg-secondary-700 hover:bg-secondary-600")
@@ -48,28 +56,45 @@ const DashboardLayout = () => {
             </button>
             <button
               className={
-                "w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
+                "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
                 (section === "Mutation"
                   ? "bg-primary-600"
                   : "bg-secondary-700 hover:bg-secondary-600")
               }
               onClick={() => handleSectionChange("Mutation")}
             >
-              {" "}
               Mutation
             </button>
             <button
               className={
-                "w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
+                "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
                 (section === "News"
                   ? "bg-primary-600"
                   : "bg-secondary-700 hover:bg-secondary-600")
               }
               onClick={() => handleSectionChange("News")}
             >
-              {" "}
               News
             </button>
+            {section === "News" && (
+              <Sheet open={open} onOpenChange={setOpen}>
+                <button
+                  onClick={() => setOpen(true)}
+                  className="md:absolute right-0 md:w-30 lg:mr-24 xl:mr-48 2xl:mr-96 bg-primary-600 hover:bg-primary-700 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                >
+                  Tambah
+                </button>
+
+                <SheetContent className="bg-white" side={"right"}>
+                  <SheetHeader>
+                    <SheetTitle>Tambah Berita</SheetTitle>
+                    <SheetDescription>
+                      Form atau konten bisa dimasukkan di sini.
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+            )}
           </div>
         </div>
         {
@@ -81,7 +106,7 @@ const DashboardLayout = () => {
           </div>
         }
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-12 bg-black text-white">
+      <div className="right-0 bottom-0 left-0 flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-12 bg-black text-white">
         <p className="text-center md:text-start">
           © 2023 Masjid Ibnu Sina. All rights reserved.
         </p>
