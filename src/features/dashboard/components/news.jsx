@@ -1,3 +1,12 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { EyeOpenIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 
 const NewsAdmin = () => {
@@ -31,9 +40,32 @@ const NewsAdmin = () => {
               <button className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-secondary-600 rounded-lg hover:bg-secondary-700 cursor-pointer">
                 <Pencil2Icon className="size-5" />
               </button>
-              <button className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-red-400 rounded-lg hover:bg-red-500 cursor-pointer">
-                <TrashIcon className="size-5" />
-              </button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-red-400 rounded-lg hover:bg-red-500 cursor-pointer">
+                    <TrashIcon className="size-5" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] bg-white">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Apakah kamu yakin menghapus berita?
+                    </DialogTitle>
+                    <DialogDescription>
+                      Menghapus berita akan menghilangkan data secara permanen
+                      dan tidak dapat dipulihkan kembali.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="mt-4">
+                    <button className="w-30 bg-primary-600 text-black px-8 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer">
+                      Simpan
+                    </button>
+                    <button className="w-30 bg-red-400 text-black px-8 hover:bg-red-500 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer">
+                      Batal
+                    </button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
