@@ -1,9 +1,14 @@
+import {
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  Sheet,
+} from "../../../components/ui/sheet";
 import { useState } from "react";
 
 const News = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedNews, setSelectedNews] = useState(null);
-
+  const [open, setOpen] = useState(false);
   const newsItems = [
     {
       id: 1,
@@ -43,13 +48,7 @@ const News = () => {
   const openModal = (news) => {
     setSelectedNews(news);
     setIsModalOpen(true);
-    document.body.style.overflow = "hidden"; // Prevent scrolling when modal is open
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    document.body.style.overflow = "auto"; // Restore scrolling
-    setSelectedNews(null);
+    document.body.style.overflow = "hidden";
   };
 
   return (
@@ -93,47 +92,47 @@ const News = () => {
                 <p className="text-primary-700 font-medium">{news.date}</p>
                 <p className="font-medium pb-1">{news.title}</p>
                 <p className="w-60 text-justify pb-1">{news.summary}</p>
-                <p
-                  className="font-medium underline cursor-pointer hover:text-primary-700"
-                  onClick={() => openModal(news)}
-                >
-                  Read more
-                </p>
+                <Sheet open={open} onOpenChange={setOpen}>
+                  <button
+                    className="font-medium underline cursor-pointer hover:text-primary-700"
+                    onClick={() => setOpen(true)}
+                  >
+                    Read more
+                  </button>
+                  <SheetContent className="bg-white h-screen" side={"bottom"}>
+                    <SheetHeader className="h-1/5 flex justify-center items-center">
+                      <SheetTitle className="font-semibold text-2xl">
+                        Berita Terkini
+                      </SheetTitle>
+                      <SheetDescription>
+                        Berita terkini terkait mesjid ibnu sina
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="flex items-center justify-around h-full w-full bg-black-600 rounded-t-4xl">
+                      <div className="size-96 bg-white rounded-lg"></div>
+                      <div className="flex flex-col w-3/5">
+                        <h4 className="text-white text-3xl font-semibold">Title of Content</h4>
+                        <p className="text-white">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing
+                          elit. Obcaecati voluptates sapiente, accusamus illum
+                          quas assumenda? Aperiam consectetur iusto perspiciatis
+                          laborum ipsa nesciunt? Obcaecati temporibus quisquam
+                          vero, quos expedita ipsam labore. Lorem ipsum dolor
+                          sit amet consectetur adipisicing elit. Doloribus
+                          debitis ad in, repellat vero accusantium fugit, illum
+                          iure delectus, magnam quam id unde inventore? Nisi
+                          commodi architecto consequatur temporibus
+                          reprehenderit!
+                        </p>
+                      </div>
+                    </div>
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* News Detail Modal */}
-      {isModalOpen && selectedNews && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white rounded-lg p-6 w-full max-w-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h2 className="text-xl font-bold">{selectedNews.title}</h2>
-                <p className="text-primary-700">{selectedNews.date}</p>
-              </div>
-              <button
-                onClick={closeModal}
-                className="text-gray-500 hover:text-gray-800 text-xl font-bold"
-              >
-                ×
-              </button>
-            </div>
-            <div className="bg-red-300 h-48 w-full rounded-lg mb-4"></div>
-            <div className="text-base">
-              <p className="text-justify mb-4">{selectedNews.content}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
