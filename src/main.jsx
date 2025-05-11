@@ -31,7 +31,16 @@ if ("serviceWorker" in navigator) {
 
 initWorker();
 
-createRoot(document.getElementById("root")).render(
+// Store the root in a variable to prevent multiple createRoot calls
+let root;
+
+// Create root only once
+if (!root) {
+  root = createRoot(document.getElementById("root"));
+}
+
+// Render the app
+root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

@@ -4,7 +4,7 @@ import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
 import Profile from "@/features/dashboard/components/profile";
 import { Sheet } from "../ui/sheet";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { PlusIcon } from "@radix-ui/react-icons";
 import {
@@ -13,13 +13,72 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../ui/sheet";
+import { usePostNews } from "@/features/dashboard/api/post-news";
 
 const DashboardLayout = () => {
   const [section, setSection] = useState("Dashboard");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
+
   function handleSectionChange(newSection) {
     setSection(newSection);
   }
+
+  const fileInputRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleDivClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const { mutate, isLoading, isError, isSuccess } = usePostNews();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!fileInputRef.current.files[0]) {
+      alert("Please select an image");
+      return;
+    }
+
+    if (!title.trim()) {
+      alert("Please enter a title");
+      return;
+    }
+
+    if (!description.trim()) {
+      alert("Please enter a description");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("newsImage", fileInputRef.current.files[0]);
+    formData.append("newsName", title);
+    formData.append("newsDescription", description);
+
+    mutate(formData, {
+      onSuccess: () => {
+        setOpen(false);
+        setImagePreview(null);
+        setTitle("");
+        setDescription("");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+      },
+      onError: (error) => {
+        console.error("Error posting news:", error);
+      },
+    });
+  };
 
   return (
     <div>
@@ -81,8 +140,8 @@ const DashboardLayout = () => {
             {section === "News" && (
               <Sheet open={open} onOpenChange={setOpen}>
                 <button
-                  onClick={() => setOpen(true)}
                   className="md:absolute right-0 md:w-30 lg:mr-24 xl:mr-48 2xl:mr-96 bg-primary-600 hover:bg-primary-700 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                  onClick={() => setOpen(true)}
                 >
                   Tambah
                 </button>
@@ -93,36 +152,77 @@ const DashboardLayout = () => {
                       Tambah Berita
                     </SheetTitle>
                     <SheetDescription>
-                      <div className="flex flex-col justify-center items-center gap-2 py-16 mt-2 bg-primary-600/10 hover:bg-primary-600/15 cursor-pointer border-2 border-black-600 rounded-lg p-2 mb-4">
-                        <PlusIcon className="size-8" />
-                        <p className="text-md">Pilih Gambar</p>
+                      Use this form to add a new news item
+                    </SheetDescription>
+                    <form onSubmit={handleSubmit}>
+                      <div>
+                        <div
+                          onClick={handleDivClick}
+                          className="relative flex flex-col justify-center items-center gap-2 py-16 mt-2 bg-primary-600/10 hover:bg-primary-600/15 cursor-pointer border-2 border-black-600 rounded-lg p-2 mb-4 h-64 overflow-hidden"
+                        >
+                          {!imagePreview && (
+                            <>
+                              <PlusIcon className="size-8 z-10" />
+                              <p className="text-md z-10">Pilih Gambar</p>
+                            </>
+                          )}
+
+                          {imagePreview && (
+                            <img
+                              src={imagePreview}
+                              alt="Preview"
+                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+                            />
+                          )}
+                        </div>
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          ref={fileInputRef}
+                          onChange={handleImageChange}
+                          className="hidden"
+                        />
                       </div>
                       <Input
                         className="border-2 border-black-600 rounded-lg"
-                        placeHolder="Masukkan Judul"
+                        placeholder="Masukkan Judul"
+                        onChange={(e) => setTitle(e.target.value)}
                       />
-                      <textarea className="w-full border-2 border-black-600 rounded-lg text-md text-black-600 p-2 placeholder-black-600 mb-3" rows={"6"} placeholder="Deskripsi" name="description" id=""></textarea>
-                      <button className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 bg-primary-600 hover:bg-primary-700 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer">
+                      <textarea
+                        className="w-full border-2 border-black-600 rounded-lg text-md text-black-600 p-2 placeholder-black-600 mb-3"
+                        rows={"6"}
+                        placeholder="Deskripsi"
+                        name="description"
+                        id=""
+                        onChange={(e) => setDescription(e.target.value)}
+                      ></textarea>
+                      <button
+                        type="submit"
+                        className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 bg-primary-600 hover:bg-primary-700 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                      >
                         Simpan
                       </button>
-                      <button className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 mt-2 bg-red-400 hover:bg-red-500 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={() => setOpen(false)}
+                        className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 mt-2 bg-red-400 hover:bg-red-500 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                      >
                         Batal
                       </button>
-                    </SheetDescription>
+                    </form>
                   </SheetHeader>
                 </SheetContent>
               </Sheet>
             )}
           </div>
         </div>
-        {
-          <div className="mt-4">
-            {section === "Dashboard" && <Dashboard />}
-            {section === "Mutation" && <Mutation />}
-            {section === "News" && <NewsAdmin />}
-            {section === "Profile" && <Profile />}
-          </div>
-        }
+        <div className="mt-4">
+          {section === "Dashboard" && <Dashboard />}
+          {section === "Mutation" && <Mutation />}
+          {section === "News" && <NewsAdmin />}
+          {section === "Profile" && <Profile />}
+        </div>
       </div>
       <div className="right-0 bottom-0 left-0 flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-12 bg-black text-white">
         <p className="text-center md:text-start">
