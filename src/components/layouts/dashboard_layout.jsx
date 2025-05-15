@@ -1,10 +1,11 @@
 import Dashboard from "@/features/dashboard/components/dashboard";
-import IconLogo from "../../assets/icons/ic_logo.svg";
+import IconLogo from "@/assets/icons/ic_logo.svg";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
+import DonationsAdmin from "@/features/dashboard/components/donations";
 import Profile from "@/features/dashboard/components/profile";
 import { Sheet } from "../ui/sheet";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { PlusIcon } from "@radix-ui/react-icons";
 import {
@@ -24,9 +25,9 @@ const DashboardLayout = () => {
   function handleSectionChange(newSection) {
     setSection(newSection);
   }
-
   const fileInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [formValid, setFormValid] = useState(false);
 
   const handleDivClick = () => {
     fileInputRef.current.click();
@@ -38,6 +39,15 @@ const DashboardLayout = () => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
+
+  // Check form validity whenever inputs change
+  useEffect(() => {
+    const hasImage = !!imagePreview;
+    const hasTitle = !!title.trim();
+    const hasDescription = !!description.trim();
+
+    setFormValid(hasImage && hasTitle && hasDescription);
+  }, [title, description, imagePreview]);
 
   const { mutate, isLoading, isError, isSuccess } = usePostNews();
 
@@ -81,8 +91,8 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div>
-      <div className="mx-12 lg:mx-24 xl:mx-48 2xl:mx-96">
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-grow mx-12 lg:mx-24 xl:mx-48 2xl:mx-96">
         <div className="flex justify-between items-center mt-4">
           <div className="flex items-center gap-2 mb-4">
             <img className="size-14" src={IconLogo} alt="icon.svg" />
@@ -125,7 +135,7 @@ const DashboardLayout = () => {
               onClick={() => handleSectionChange("Mutation")}
             >
               Mutation
-            </button>
+            </button>{" "}
             <button
               className={
                 "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
@@ -136,6 +146,17 @@ const DashboardLayout = () => {
               onClick={() => handleSectionChange("News")}
             >
               News
+            </button>
+            <button
+              className={
+                "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
+                (section === "Donations"
+                  ? "bg-primary-600"
+                  : "bg-secondary-700 hover:bg-secondary-600")
+              }
+              onClick={() => handleSectionChange("Donations")}
+            >
+              Donations
             </button>
             {section === "News" && (
               <Sheet open={open} onOpenChange={setOpen}>
@@ -196,12 +217,17 @@ const DashboardLayout = () => {
                         name="description"
                         id=""
                         onChange={(e) => setDescription(e.target.value)}
-                      ></textarea>
+                      ></textarea>{" "}
                       <button
                         type="submit"
-                        className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 bg-primary-600 hover:bg-primary-700 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                        disabled={!formValid || isLoading}
+                        className={`w-full lg:mr-24 xl:mr-48 2xl:mr-96 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 ${
+                          formValid && !isLoading
+                            ? "bg-primary-600 hover:bg-primary-700 cursor-pointer"
+                            : "bg-gray-400 opacity-50 cursor-not-allowed"
+                        }`}
                       >
-                        Simpan
+                        {isLoading ? "Menyimpan..." : "Simpan"}
                       </button>
                       <button
                         type="button"
@@ -216,20 +242,21 @@ const DashboardLayout = () => {
               </Sheet>
             )}
           </div>
-        </div>
+        </div>{" "}
         <div className="mt-4">
           {section === "Dashboard" && <Dashboard />}
           {section === "Mutation" && <Mutation />}
           {section === "News" && <NewsAdmin />}
+          {section === "Donations" && <DonationsAdmin />}
           {section === "Profile" && <Profile />}
         </div>
-      </div>
-      <div className="right-0 bottom-0 left-0 flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-12 bg-black text-white">
+      </div>{" "}
+      <footer className="right-0 bottom-0 left-0 flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-auto bg-black text-white">
         <p className="text-center md:text-start">
           © 2023 Masjid Ibnu Sina. All rights reserved.
         </p>
         <p className="hover:underline cursor-pointer">Privacy Policy</p>
-      </div>
+      </footer>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import IconLogo from "../../assets/icons/ic_logo.svg";
+import IconLogo from "@/assets/icons/ic_logo.svg";
 import IconHamburgerMenu from "../../assets/icons/ic_hamburger_menu.svg";
 import { useEffect, useState } from "react";
 

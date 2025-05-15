@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export function useNews() {
+export function useNews(page = 1, limit = 4) {
   return useQuery({
-    queryKey: ["news"],
+    queryKey: ["news", page, limit],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:9999/news");
+      const response = await axios.get(
+        `http://localhost:9999/news?page=${page}&limit=${limit}`
+      );
       return response.data;
     },
   });

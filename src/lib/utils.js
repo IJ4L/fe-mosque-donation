@@ -67,3 +67,30 @@ export function memoize(fn) {
     return result;
   };
 }
+
+// Format date for display
+export function formatDate(dateString) {
+  const date = new Date(dateString);
+  
+  // Format: 24, Mei 2024
+  const day = date.getDate();
+  
+  const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  const month = months[date.getMonth()];
+  
+  const year = date.getFullYear();
+  
+  return `${day}, ${month} ${year}`;
+}
+
+// Format time for display
+export function formatTime(dateString) {
+  const date = new Date(dateString);
+  
+  // Format: 23:00
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+  return `${hours}.${minutes}`;
+}

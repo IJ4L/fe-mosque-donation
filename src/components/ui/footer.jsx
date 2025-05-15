@@ -1,4 +1,4 @@
-import IconLogo from "../../assets/icons/ic_logo.svg";
+import IconLogo from "@/assets/icons/ic_logo.svg";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
 
 const Footer = () => {

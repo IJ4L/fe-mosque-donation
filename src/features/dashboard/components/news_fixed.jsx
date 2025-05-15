@@ -54,6 +54,7 @@ const NewsAdmin = () => {
     handlePrevPage,
     handlePageChange,
   } = useNewsAdmin();
+
   return (
     <div className="">
       {isLoading ? (
@@ -80,14 +81,12 @@ const NewsAdmin = () => {
               key={newsItem.newsID}
               className="flex flex-col md:flex-row space mb-4 space-y-2 md:space-y-0 md:space-x-4"
             >
-              {" "}
               <img
                 className="md:w-1/2 w-full object-cover h-40 md:h-60 rounded-lg aspect-video"
                 src={"http://localhost:9999" + newsItem.newsImage}
                 alt={newsItem.newsName}
               />
               <div className="w-full flex items-center justify-between gap-6 bg-gray-100 rounded-lg py-4 px-6">
-                {" "}
                 <div className="text-justify line-clamp-6">
                   <h3 className="font-semibold text-lg mb-2">
                     {newsItem.newsName}
@@ -97,16 +96,16 @@ const NewsAdmin = () => {
                 <div className="flex flex-col space-y-2">
                   <button
                     onClick={() => handleViewClick(newsItem.newsID)}
-                    className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-primary-600 rounded-lg hover:bg-primary-700 cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
+                    className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-primary-600 rounded-lg hover:bg-primary-700 cursor-pointer"
                   >
                     <EyeOpenIcon className="size-5" />
                   </button>
                   <button
                     onClick={() => handleEditClick(newsItem.newsID)}
-                    className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-secondary-600 rounded-lg hover:bg-secondary-700 cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
+                    className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-secondary-600 rounded-lg hover:bg-secondary-700 cursor-pointer"
                   >
                     <Pencil2Icon className="size-5" />
-                  </button>{" "}
+                  </button>
                   <Dialog
                     open={openDeleteDialog}
                     onOpenChange={setOpenDeleteDialog}
@@ -114,7 +113,7 @@ const NewsAdmin = () => {
                     <DialogTrigger asChild>
                       <button
                         onClick={() => handleDeleteClick(newsItem.newsID)}
-                        className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-red-400 rounded-lg hover:bg-red-500 cursor-pointer transform transition-transform hover:scale-105 active:scale-95"
+                        className="flex items-center justify-center size-12 bg-red-40 border-2 border-black-600 bg-red-400 rounded-lg hover:bg-red-500 cursor-pointer"
                       >
                         <TrashIcon className="size-5" />
                       </button>
@@ -151,35 +150,71 @@ const NewsAdmin = () => {
               </div>
             </div>
           ))}
-        </>
-      )}{" "}
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent
-          className="bg-white data-[state=open]:duration-5000 data-[state=closed]:duration-5000"
-          side={"right"}
-        >
-          <SheetHeader>
-            <SheetTitle
-              className="font-semibold text-2xl items-center animate-fadeIn"
-              style={{ animationDelay: "100ms", animationFillMode: "forwards" }}
+
+          {/* Pagination */}
+          <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-2 mb-6">
+            <button
+              onClick={handlePrevPage}
+              disabled={isLoading || !data?.pagination || currentPage <= 1}
+              className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
+                isLoading || !data?.pagination || currentPage <= 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
             >
+              Sebelumnya
+            </button>
+
+            {data?.pagination &&
+              Array.from({ length: data.pagination.totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(index + 1)}
+                  disabled={isLoading}
+                  className={`text-black px-6 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
+                    currentPage === index + 1
+                      ? "bg-secondary-700 hover:bg-secondary-600"
+                      : "bg-primary-600 hover:bg-primary-700"
+                  } ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+            <button
+              onClick={handleNextPage}
+              disabled={
+                isLoading ||
+                !data?.pagination ||
+                currentPage >= data.pagination.totalPages
+              }
+              className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
+                isLoading ||
+                !data?.pagination ||
+                currentPage >= data.pagination.totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+            >
+              Selanjutnya
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Edit Sheet */}
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent className="bg-white" side={"right"}>
+          <SheetHeader>
+            <SheetTitle className="font-semibold text-2xl items-center">
               Edit Berita
             </SheetTitle>
-            <SheetDescription
-              className="animate-fadeIn"
-              style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
-            >
-              Ubah informasi berita
-            </SheetDescription>
-            <form
-              onSubmit={handleSubmit}
-              className="animate-fadeIn"
-              style={{ animationDelay: "300ms", animationFillMode: "forwards" }}
-            >
+            <SheetDescription>Ubah informasi berita</SheetDescription>
+            <form onSubmit={handleSubmit}>
               <div>
                 <div
                   onClick={handleDivClick}
-                  className="relative flex flex-col justify-center items-center gap-2 py-16 mt-2 bg-primary-600/10 hover:bg-primary-600/15 cursor-pointer border-2 border-black-600 rounded-lg p-2 mb-4 h-64 overflow-hidden transition-all hover:shadow-lg"
+                  className="relative flex flex-col justify-center items-center gap-2 py-16 mt-2 bg-primary-600/10 hover:bg-primary-600/15 cursor-pointer border-2 border-black-600 rounded-lg p-2 mb-4 h-64 overflow-hidden"
                 >
                   {!imagePreview && (
                     <>
@@ -192,8 +227,7 @@ const NewsAdmin = () => {
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="absolute top-0 left-0 w-full h-full object-cover rounded-lg animate-scaleIn"
-                      style={{ animationFillMode: "forwards" }}
+                      className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
                     />
                   )}
                 </div>
@@ -223,9 +257,9 @@ const NewsAdmin = () => {
               <button
                 type="submit"
                 disabled={!formValid || isSubmitting}
-                className={`w-full lg:mr-24 xl:mr-48 2xl:mr-96 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition-all duration-300 ${
+                className={`w-full lg:mr-24 xl:mr-48 2xl:mr-96 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 ${
                   formValid && !isSubmitting
-                    ? "bg-primary-600 hover:bg-primary-700 cursor-pointer hover:shadow-md transform hover:-translate-y-1"
+                    ? "bg-primary-600 hover:bg-primary-700 cursor-pointer"
                     : "bg-gray-400 opacity-50 cursor-not-allowed"
                 }`}
               >
@@ -234,60 +268,36 @@ const NewsAdmin = () => {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 mt-2 bg-red-400 hover:bg-red-500 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition-all duration-300 cursor-pointer hover:shadow-md transform hover:-translate-y-1"
+                className="w-full lg:mr-24 xl:mr-48 2xl:mr-96 mt-2 bg-red-400 hover:bg-red-500 text-black px-4 py-3 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
               >
-                Batal{" "}
+                Batal
               </button>
             </form>
           </SheetHeader>
         </SheetContent>
       </Sheet>
-      {/* Detail View Sheet */}{" "}
+
+      {/* Detail View Sheet */}
       <Sheet open={openDetailSheet} onOpenChange={setOpenDetailSheet}>
-        <SheetContent
-          className="bg-white h-screen data-[state=open]:duration-500 data-[state=closed]:duration-300"
-          side={"bottom"}
-        >
+        <SheetContent className="bg-white h-screen" side={"bottom"}>
           <SheetHeader className="h-1/5 flex justify-center items-center">
-            <SheetTitle
-              className="font-semibold text-2xl animate-fadeIn"
-              style={{ animationDelay: "100ms", animationFillMode: "forwards" }}
-            >
+            <SheetTitle className="font-semibold text-2xl">
               Berita Terkini
             </SheetTitle>
-            <SheetDescription
-              className="animate-fadeIn"
-              style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
-            >
+            <SheetDescription>
               Berita terkini terkait mesjid ibnu sina
-            </SheetDescription>{" "}
+            </SheetDescription>
           </SheetHeader>
           {viewingNews && viewingNews.data && (
-            <div
-              className="flex items-center justify-around h-full w-full bg-black-600 rounded-t-4xl p-6 animate-scaleIn"
-              style={{ animationDelay: "300ms", animationFillMode: "forwards" }}
-            >
-              <div
-                className="size-96 bg-white rounded-lg overflow-hidden animate-fadeIn"
-                style={{
-                  animationDelay: "500ms",
-                  animationFillMode: "forwards",
-                }}
-              >
+            <div className="flex items-center justify-around h-full w-full bg-black-600 rounded-t-4xl p-6">
+              <div className="size-96 bg-white rounded-lg overflow-hidden">
                 <img
                   src={"http://localhost:9999" + viewingNews.data.newsImage}
                   alt={viewingNews.data.newsName}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div
-                className="flex flex-col w-3/5 animate-slideIn"
-                style={{
-                  animationDelay: "600ms",
-                  animationFillMode: "forwards",
-                }}
-              >
-                {" "}
+              <div className="flex flex-col w-3/5">
                 <h4 className="text-white text-3xl font-semibold">
                   {viewingNews.data.newsName}
                 </h4>
@@ -298,55 +308,7 @@ const NewsAdmin = () => {
             </div>
           )}
         </SheetContent>
-      </Sheet>{" "}
-      {/* Pagination */}
-      {!isLoading && data && data.data && data.data.length > 0 && (
-        <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-2 mb-6">
-          <button
-            onClick={handlePrevPage}
-            disabled={isLoading || !data?.pagination || currentPage <= 1}
-            className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition-all duration-300 mt-4 hover:shadow-md transform hover:-translate-y-1 ${
-              isLoading || !data?.pagination || currentPage <= 1
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-          >
-            Sebelumnya
-          </button>
-          {data?.pagination &&
-            Array.from({ length: data.pagination.totalPages }, (_, index) => (
-              <button
-                key={index}
-                onClick={() => handlePageChange(index + 1)}
-                disabled={isLoading}
-                className={`text-black px-6 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition-all duration-300 mt-4 hover:shadow-md transform hover:-translate-y-1 ${
-                  currentPage === index + 1
-                    ? "bg-primary-600 hover:bg-primary-700"
-                    : "bg-secondary-700 hover:bg-secondary-600"
-                } ${isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          <button
-            onClick={handleNextPage}
-            disabled={
-              isLoading ||
-              !data?.pagination ||
-              currentPage >= data.pagination.totalPages
-            }
-            className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition-all duration-300 mt-4 hover:shadow-md transform hover:-translate-y-1 ${
-              isLoading ||
-              !data?.pagination ||
-              currentPage >= data.pagination.totalPages
-                ? "opacity-50 cursor-not-allowed"
-                : "cursor-pointer"
-            }`}
-          >
-            Selanjutnya
-          </button>
-        </div>
-      )}
+      </Sheet>
     </div>
   );
 };
