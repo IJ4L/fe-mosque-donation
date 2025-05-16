@@ -2,7 +2,6 @@ import Dashboard from "@/features/dashboard/components/dashboard";
 import IconLogo from "@/assets/icons/ic_logo.svg";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
-import DonationsAdmin from "@/features/dashboard/components/donations";
 import Profile from "@/features/dashboard/components/profile";
 import { Sheet } from "../ui/sheet";
 import { useRef, useState, useEffect } from "react";
@@ -147,17 +146,6 @@ const DashboardLayout = () => {
             >
               News
             </button>
-            <button
-              className={
-                "w-full md:w-30 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer " +
-                (section === "Donations"
-                  ? "bg-primary-600"
-                  : "bg-secondary-700 hover:bg-secondary-600")
-              }
-              onClick={() => handleSectionChange("Donations")}
-            >
-              Donations
-            </button>
             {section === "News" && (
               <Sheet open={open} onOpenChange={setOpen}>
                 <button
@@ -247,7 +235,6 @@ const DashboardLayout = () => {
           {section === "Dashboard" && <Dashboard />}
           {section === "Mutation" && <Mutation />}
           {section === "News" && <NewsAdmin />}
-          {section === "Donations" && <DonationsAdmin />}
           {section === "Profile" && <Profile />}
         </div>
       </div>{" "}

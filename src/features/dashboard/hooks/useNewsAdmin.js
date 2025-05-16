@@ -33,7 +33,6 @@ export function useNewsAdmin() {
     }
   }, [editingNews]);
 
-  // Check form validity whenever inputs change
   useEffect(() => {
     const hasImage = !!imagePreview;
     const hasTitle = !!title.trim();
