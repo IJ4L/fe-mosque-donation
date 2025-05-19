@@ -56,7 +56,7 @@ const NewsAdmin = () => {
   } = useNewsAdmin();
 
   return (
-    <div className="">
+    <div>
       {isLoading ? (
         <div className="flex flex-col space-y-4">
           <NewsItemSkeleton />
@@ -71,7 +71,7 @@ const NewsAdmin = () => {
           <p>Error: {error.message}</p>
         </div>
       ) : !data || !data.data || data.data.length === 0 ? (
-        <div className="flex justify-center items-center h-40">
+        <div className="text-center p-4 bg-gray-100 rounded-lg mt-4">
           <p>Tidak ada berita untuk ditampilkan</p>
         </div>
       ) : (
@@ -132,7 +132,7 @@ const NewsAdmin = () => {
                         <button
                           onClick={handleConfirmDelete}
                           disabled={isDeleting}
-                          className="w-30 bg-primary-600 text-black px-8 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
+                          className="bg-primary-600 text-black px-8 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer"
                         >
                           {isDeleting ? "Menghapus..." : "Hapus"}
                         </button>
@@ -151,7 +151,6 @@ const NewsAdmin = () => {
             </div>
           ))}
 
-          {/* Pagination */}
           <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-2 mb-6">
             <button
               onClick={handlePrevPage}
@@ -202,7 +201,6 @@ const NewsAdmin = () => {
         </>
       )}
 
-      {/* Edit Sheet */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent className="bg-white" side={"right"}>
           <SheetHeader>
@@ -263,7 +261,7 @@ const NewsAdmin = () => {
                     : "bg-gray-400 opacity-50 cursor-not-allowed"
                 }`}
               >
-                {isSubmitting ? "Menyimpan..." : "Simpan"}
+                Simpan
               </button>
               <button
                 type="button"
@@ -277,7 +275,6 @@ const NewsAdmin = () => {
         </SheetContent>
       </Sheet>
 
-      {/* Detail View Sheet */}
       <Sheet open={openDetailSheet} onOpenChange={setOpenDetailSheet}>
         <SheetContent className="bg-white h-screen" side={"bottom"}>
           <SheetHeader className="h-1/5 flex justify-center items-center">

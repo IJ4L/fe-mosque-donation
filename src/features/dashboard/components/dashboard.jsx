@@ -75,7 +75,7 @@ const Dashboard = () => {
           </div>
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-1.5 bg-primary-600 text-black px-4 sm:px-6 md:px-8 hover:bg-primary-700 py-1.5 sm:py-2 rounded-lg border-2 border-black-600 font-semibold text-xs sm:text-sm md:text-md transition duration-300 cursor-pointer"
+            className="flex items-center gap-1.5 bg-primary-600 text-black px-2 sm:px-4 md:px-6 hover:bg-primary-700 py-1.5 sm:py-2 rounded-lg border-2 border-black-600 font-semibold text-xs sm:text-sm md:text-md transition duration-300 cursor-pointer"
           >
             <DownloadIcon className="" />
             Export
@@ -101,20 +101,13 @@ const Dashboard = () => {
             data.data.donations.map((donation) => (
               <div
                 key={donation.donationID}
-                className="flex justify-between bg-gray-100 border-2 border-black-600 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
+                className="flex justify-between gap-6 bg-gray-100 border-2 border-black-600 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
               >
                 <div>
                   <p>Donasi</p>
                   <h5 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-5xl font-regular">
                     {formatCurrency(donation.donationAmount).replace("Rp", "")}
                   </h5>
-                  {/* <p className="text-red-500 text-xs sm:text-sm">
-                    -{" "}
-                    {formatCurrency(donation.donationDeduction).replace(
-                      "Rp",
-                      ""
-                    )}
-                  </p>{" "} */}
                   <p className="text-sm mt-3">
                     {formatDate(donation.createdAt)}
                   </p>
@@ -144,69 +137,75 @@ const Dashboard = () => {
             <div className="text-center p-4">Pagination tidak tersedia</div>
           ) : (
             <>
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
-                  currentPage === 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-              >
-                Sebelumnya
-              </button>
-              {data?.data?.pagination &&
-                Array.from(
-                  { length: Math.min(5, data.data.pagination.totalPages) },
-                  (_, index) => {
-                    let pageNum;
-                    if (data.data.pagination.totalPages <= 5) {
-                      pageNum = index + 1;
-                    } else {
-                      const halfWay = Math.floor(5 / 2);
-                      if (currentPage <= halfWay + 1) {
-                        pageNum = index + 1;
-                      } else if (
-                        currentPage >=
-                        data.data.pagination.totalPages - halfWay
-                      ) {
-                        pageNum =
-                          data.data.pagination.totalPages - 5 + index + 1;
-                      } else {
-                        pageNum = currentPage - halfWay + index;
-                      }
-                    }
+              {data?.data?.pagination && (
+                <>
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
+                      currentPage === 1
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    Sebelumnya
+                  </button>
+                  {data?.data?.pagination &&
+                    Array.from(
+                      {
+                        length: Math.min(5, data.data.pagination.totalPages),
+                      },
+                      (_, index) => {
+                        let pageNum;
+                        if (data.data.pagination.totalPages <= 5) {
+                          pageNum = index + 1;
+                        } else {
+                          const halfWay = Math.floor(5 / 2);
+                          if (currentPage <= halfWay + 1) {
+                            pageNum = index + 1;
+                          } else if (
+                            currentPage >=
+                            data.data.pagination.totalPages - halfWay
+                          ) {
+                            pageNum =
+                              data.data.pagination.totalPages - 5 + index + 1;
+                          } else {
+                            pageNum = currentPage - halfWay + index;
+                          }
+                        }
 
-                    return (
-                      <button
-                        key={index}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`${
-                          currentPage === pageNum
-                            ? "bg-primary-600"
-                            : "bg-secondary-700 hover:bg-secondary-600"
-                        } text-black px-6 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer mt-4`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  }
-                )}
-              <button
-                onClick={handleNextPage}
-                disabled={
-                  !data?.data?.pagination ||
-                  currentPage >= data.data.pagination.totalPages
-                }
-                className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
-                  !data?.data?.pagination ||
-                  currentPage >= data.data.pagination.totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }`}
-              >
-                Selanjutnya
-              </button>
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handlePageChange(pageNum)}
+                            className={`${
+                              currentPage === pageNum
+                                ? "bg-secondary-700 hover:bg-secondary-600"
+                                : "bg-primary-600"
+                            } text-black px-6 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 cursor-pointer mt-4`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      }
+                    )}
+                  <button
+                    onClick={handleNextPage}
+                    disabled={
+                      !data?.data?.pagination ||
+                      currentPage >= data.data.pagination.totalPages
+                    }
+                    className={`bg-primary-600 text-black px-6 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-md transition duration-300 mt-4 ${
+                      !data?.data?.pagination ||
+                      currentPage >= data.data.pagination.totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    Selanjutnya
+                  </button>
+                </>
+              )}
             </>
           )}
         </div>

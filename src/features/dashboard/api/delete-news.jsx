@@ -14,7 +14,6 @@ export function useDeleteNews() {
       }
     },
     onSuccess: () => {
-      // Invalidate and refetch the news list
       queryClient.invalidateQueries({ queryKey: ["news"] });
     },
   });

@@ -119,6 +119,7 @@ export function useNewsAdmin() {
       formData.append("newsImage", editingNews.data.newsImage);
     }
 
+    formData.append("newsAuthor", 1);
     formData.append("newsName", title);
     formData.append("newsDescription", description);
 

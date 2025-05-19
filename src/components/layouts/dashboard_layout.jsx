@@ -39,7 +39,6 @@ const DashboardLayout = () => {
     }
   };
 
-  // Check form validity whenever inputs change
   useEffect(() => {
     const hasImage = !!imagePreview;
     const hasTitle = !!title.trim();
@@ -133,7 +132,7 @@ const DashboardLayout = () => {
               }
               onClick={() => handleSectionChange("Mutation")}
             >
-              Mutation
+              Mutasi
             </button>{" "}
             <button
               className={
@@ -144,7 +143,7 @@ const DashboardLayout = () => {
               }
               onClick={() => handleSectionChange("News")}
             >
-              News
+              Berita
             </button>
             {section === "News" && (
               <Sheet open={open} onOpenChange={setOpen}>
@@ -215,7 +214,7 @@ const DashboardLayout = () => {
                             : "bg-gray-400 opacity-50 cursor-not-allowed"
                         }`}
                       >
-                        {isLoading ? "Menyimpan..." : "Simpan"}
+                        Simpan
                       </button>
                       <button
                         type="button"
