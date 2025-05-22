@@ -1,11 +1,12 @@
 import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./index.css";
 import { queryClient } from "./lib/queryClient";
 import { router } from "./app/router";
 import { initWorker } from "./lib/workerUtils";
+import { ToastProvider } from "./components/ui/toast-provider";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((module) => ({
@@ -44,6 +45,7 @@ root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <ToastProvider />
       {process.env.NODE_ENV === "development" && (
         <Suspense fallback={null}>
           <ReactQueryDevtools initialIsOpen={false} />

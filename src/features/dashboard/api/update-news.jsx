@@ -7,23 +7,48 @@ export function useUpdateNews() {
   return useMutation({
     mutationFn: async ({ id, formData }) => {
       try {
-        // Ensure the formData object includes newsDescription and newsImage
+        console.log(`useUpdateNews - Updating news with ID: ${id}`);
+
+        // Debug FormData content
+        console.log("FormData entries before sending to server:");
+        for (let pair of formData.entries()) {
+          if (pair[1] instanceof File) {
+            console.log(
+              `${pair[0]}: File(${pair[1].name}, ${pair[1].size} bytes, ${pair[1].type})`
+            );
+          } else {
+            console.log(`${pair[0]}: ${pair[1]}`);
+          }
+        }
+
+        // Make the API call        // Don't manually set Content-Type for multipart/form-data
+        // The browser will set it with the correct boundary
         const response = await axios.patch(
           `http://localhost:9999/news/${id}`,
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data",
+              // Allow browser to set Content-Type with proper boundaries
             },
-            transformRequest: [(data) => data],
+            transformRequest: [(data) => data], // Prevent axios from modifying FormData
           }
         );
+
+        console.log("useUpdateNews - Response received:", response.data);
         return response.data;
       } catch (error) {
+        console.error("useUpdateNews - Error occurred:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+          console.error("Response status:", error.response.status);
+        }
         throw error;
       }
     },
     onSuccess: (data, variables) => {
+      console.log(
+        `useUpdateNews - Success, invalidating queries for ID: ${variables.id}`
+      );
       queryClient.invalidateQueries({ queryKey: ["news"] });
       queryClient.invalidateQueries({ queryKey: ["news", variables.id] });
     },

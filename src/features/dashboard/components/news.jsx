@@ -20,6 +20,7 @@ import {
 import { useNewsAdmin } from "../hooks/useNewsAdmin";
 import NewsItemSkeleton from "@/components/ui/skeletons/NewsItemSkeleton";
 import PaginationSkeleton from "@/components/ui/skeletons/PaginationSkeleton";
+import { formatImageUrl, handleImageError } from "@/lib/imageUtils";
 
 const NewsAdmin = () => {
   const {
@@ -81,10 +82,14 @@ const NewsAdmin = () => {
               key={newsItem.newsID}
               className="flex flex-col md:flex-row space mb-4 space-y-2 md:space-y-0 md:space-x-4"
             >
+              {" "}
               <img
                 className="md:w-1/2 w-full object-cover h-40 md:h-60 rounded-lg aspect-video"
-                src={"http://localhost:9999" + newsItem.newsImage}
+                src={formatImageUrl(newsItem.newsImage)}
                 alt={newsItem.newsName}
+                onError={(e) => handleImageError(e, `News+${newsItem.newsID}`)}
+                loading="lazy"
+                decoding="async"
               />
               <div className="w-full flex items-center justify-between gap-6 bg-gray-100 rounded-lg py-4 px-6">
                 <div className="text-justify line-clamp-6">
@@ -288,10 +293,12 @@ const NewsAdmin = () => {
           {viewingNews && viewingNews.data && (
             <div className="flex items-center justify-around h-full w-full bg-black-600 rounded-t-4xl p-6">
               <div className="size-96 bg-white rounded-lg overflow-hidden">
+                {" "}
                 <img
-                  src={"http://localhost:9999" + viewingNews.data.newsImage}
+                  src={formatImageUrl(viewingNews.data.newsImage)}
                   alt={viewingNews.data.newsName}
                   className="w-full h-full object-cover"
+                  onError={handleImageError}
                 />
               </div>
               <div className="flex flex-col w-3/5">

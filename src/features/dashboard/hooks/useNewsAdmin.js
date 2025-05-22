@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { useNews, useNewsById } from "../api/get-news";
 import { useUpdateNews } from "../api/update-news";
 import { useDeleteNews } from "../api/delete-news";
+import { formatImageUrl } from "@/lib/imageUtils";
+import { logFormData } from "@/debug-form-data";
+import { toast } from "sonner";
 
 export function useNewsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,13 +25,26 @@ export function useNewsAdmin() {
   const { data: editingNews } = useNewsById(editingNewsId);
   const { data: viewingNews } = useNewsById(viewingNewsId);
   const { mutate: updateNews } = useUpdateNews();
-  const { mutate: deleteNews } = useDeleteNews();
-  useEffect(() => {
+  const { mutate: deleteNews } = useDeleteNews();  useEffect(() => {
     if (editingNews && editingNews.data) {
+      console.log("Editing news data:", editingNews.data);
+      
       setTitle(editingNews.data.newsName || "");
       setDescription(editingNews.data.newsDescription || "");
+      
       if (editingNews.data.newsImage) {
-        setImagePreview("http://localhost:9999" + editingNews.data.newsImage);
+        const imgPath = editingNews.data.newsImage;
+        console.log("News image path:", imgPath);
+        
+        // Handle image path properly - check if it already has http:// or starts with /
+        const formattedPath = imgPath.startsWith('http') 
+          ? imgPath 
+          : `http://localhost:9999${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
+        
+        console.log("Formatted image path:", formattedPath);
+        setImagePreview(formattedPath);
+      } else {
+        console.log("No image path in edited news");
       }
     }
   }, [editingNews]);
@@ -54,28 +70,28 @@ export function useNewsAdmin() {
     setDeletingNewsId(String(id));
     setOpenDeleteDialog(true);
   };
-
   const handleConfirmDelete = () => {
     if (!deletingNewsId) {
-      alert("ID berita tidak valid");
+      toast.error("ID berita tidak valid");
       return;
     }
 
     setIsDeleting(true);
+    toast.loading("Menghapus berita...");
 
     deleteNews(deletingNewsId, {
       onSuccess: () => {
+        toast.dismiss();
+        toast.success("Berita berhasil dihapus!");
         setOpenDeleteDialog(false);
         setDeletingNewsId(null);
         setIsDeleting(false);
-        // alert("Berita berhasil dihapus!");
       },
       onError: (error) => {
+        toast.dismiss();
+        toast.error(`Gagal menghapus berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`);
         console.error("Delete error:", error);
         setIsDeleting(false);
-        // alert(
-        //   `Gagal menghapus berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`
-        // );
       },
     });
   };
@@ -83,52 +99,81 @@ export function useNewsAdmin() {
   const handleDivClick = () => {
     fileInputRef.current.click();
   };
-
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target?.files?.[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
     }
-  };
-
-  const handleSubmit = (e) => {
+  };  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("Judul berita tidak boleh kosong");
+      toast.error("Judul berita tidak boleh kosong");
       return;
     }
 
     if (!description.trim()) {
-      alert("Deskripsi berita tidak boleh kosong");
+      toast.error("Deskripsi berita tidak boleh kosong");
       return;
     }
 
     if (!editingNewsId) {
-      alert("ID berita tidak valid");
+      toast.error("ID berita tidak valid");
       return;
     }
 
     setIsSubmitting(true);
-
+    toast.loading("Menyimpan perubahan...");
+    
     const formData = new FormData();
 
-    if (fileInputRef.current.files[0]) {
-      formData.append("newsImage", fileInputRef.current.files[0]);
-    } else if (editingNews && editingNews.data && editingNews.data.newsImage) {
-      formData.append("newsImage", editingNews.data.newsImage);
+    // Only append image if there's a new file selected
+    if (fileInputRef.current && fileInputRef.current.files[0]) {
+      const file = fileInputRef.current.files[0];
+      
+      // Log the file details
+      console.log(`Update - File selected: ${file.name} (${file.size} bytes, ${file.type})`);
+
+      // Validate file
+      if (file.size === 0) {
+        toast.dismiss();
+        toast.error("File gambar kosong atau rusak");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Check if it's an image
+      if (!file.type.startsWith('image/')) {
+        toast.dismiss();
+        toast.error("File bukan gambar valid");
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Clean filename to prevent special character issues
+      const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, '_');
+      const cleanedFile = new File([file], cleanFileName, { type: file.type });
+      
+      formData.append("newsImage", cleanedFile);
+    } else {
+      console.log("No new image file selected, keeping existing image");
     }
+    // No need for an else clause - if no new image is provided, the backend will keep the existing one
 
     formData.append("newsAuthor", 1);
     formData.append("newsName", title);
     formData.append("newsDescription", description);
 
     const newsId = String(editingNewsId).trim();
+    
+    // Log the form data to verify structure
+    logFormData(formData);
 
     updateNews(
       { id: newsId, formData },
-      {
-        onSuccess: () => {
+      {        onSuccess: () => {
+          toast.dismiss();
+          toast.success("Berita berhasil diperbarui!");
           setOpen(false);
           setImagePreview(null);
           setTitle("");
@@ -138,14 +183,12 @@ export function useNewsAdmin() {
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }
-          alert("Berita berhasil diperbarui!");
         },
         onError: (error) => {
+          toast.dismiss();
+          toast.error(`Gagal memperbarui berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`);
           console.error("Update error:", error);
           setIsSubmitting(false);
-          alert(
-            `Gagal memperbarui berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`
-          );
         },
       }
     );
