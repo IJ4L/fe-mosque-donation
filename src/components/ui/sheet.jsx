@@ -103,7 +103,6 @@ const SheetDescription = ({ className, ...props }) => {
   );
 };
 
-// Export named components instead of default export with object
 export {
   Sheet,
   SheetTrigger,

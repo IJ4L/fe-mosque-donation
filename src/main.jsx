@@ -7,6 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { router } from "./app/router";
 import { initWorker } from "./lib/workerUtils";
 import { ToastProvider } from "./components/ui/toast-provider";
+import { setupAuthInterceptor } from "./features/auth/api/auth.jsx";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((module) => ({
@@ -31,6 +32,8 @@ if ("serviceWorker" in navigator) {
 }
 
 initWorker();
+// Set up authentication interceptor for all API requests
+setupAuthInterceptor();
 
 // Store the root in a variable to prevent multiple createRoot calls
 let root;

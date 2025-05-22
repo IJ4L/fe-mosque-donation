@@ -1,12 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { getImageUrl } from "@/lib/utils";
 
-// This component implements best practices for image loading performance:
-// - Lazy loading
-// - Progressive loading with blur placeholder
-// - Proper sizing
-// - Responsive images
-
 const OptimizedImage = memo(
   ({
     src,
@@ -22,16 +16,13 @@ const OptimizedImage = memo(
   }) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Handle image load event
     const handleLoad = () => {
       setIsLoaded(true);
       onLoad();
     };
 
-    // Get properly sized image URL
     const imgSrc = getImageUrl(src);
 
-    // Force eager loading if priority is true
     const loadingAttribute = priority ? "eager" : loading;
 
     return (
@@ -39,7 +30,6 @@ const OptimizedImage = memo(
         className={`relative overflow-hidden ${className}`}
         style={{ width, height }}
       >
-        {/* Low-quality placeholder or blur while loading */}
         {!isLoaded && (
           <div
             className="absolute inset-0 bg-gray-200 animate-pulse"
@@ -64,7 +54,6 @@ const OptimizedImage = memo(
   }
 );
 
-// Add display name for debugging
 OptimizedImage.displayName = "OptimizedImage";
 
 export default OptimizedImage;

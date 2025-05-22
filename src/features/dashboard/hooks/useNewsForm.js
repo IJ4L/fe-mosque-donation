@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { usePostNews } from "@/features/dashboard/api/post-news";
-import { formatImageUrl } from "@/lib/imageUtils";
-import { logFormData, prepareFormData } from "@/debug-form-data";
 import { toast } from "sonner";
 
 export function useNewsForm() {
@@ -19,7 +17,6 @@ export function useNewsForm() {
     const file = e.target?.files?.[0];
     if (file) {
       console.log("handleImageChange: File selected:", file.name);
-      // Create a secure blob URL for the image preview
       try {
         const objectUrl = URL.createObjectURL(file);
         console.log("Preview URL created:", objectUrl);
@@ -60,11 +57,9 @@ export function useNewsForm() {
     }    
       toast.loading("Menambahkan berita...");    
     
-    // Create a completely fresh FormData object
     const formData = new FormData();
     
     try {
-      // Get the file object
       if (!fileInputRef.current || !fileInputRef.current.files || fileInputRef.current.files.length === 0) {
         throw new Error("File tidak ditemukan");
       }
@@ -75,27 +70,21 @@ export function useNewsForm() {
         throw new Error("File rusak atau kosong");
       }
       
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         throw new Error("File bukan gambar. Silakan pilih gambar yang valid");
       }
       
       console.log(`File selected: ${file.name} (${file.size} bytes, ${file.type})`);
       
-      // IMPORTANT: Make sure the key name exactly matches what the backend expects
-      // Clone the file with a cleaned name to avoid issues with special characters
       const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, '_');
       const cleanedFile = new File([file], cleanFileName, { type: file.type });
       
       formData.append("newsImage", cleanedFile);
       
-      // Add required text fields
       formData.append("newsName", title.trim());
       formData.append("newsDescription", description.trim());
       formData.append("newsAuthor", "1");
       
-      // Log the form data to verify structure
-      logFormData(formData);
       
     } catch (error) {
       console.error('Error preparing form data:', error);
@@ -104,7 +93,6 @@ export function useNewsForm() {
       return;
     }
     
-    // Log the FormData content
     console.log('FormData entries:');
     for (let pair of formData.entries()) {
       if (pair[1] instanceof File) {
@@ -114,7 +102,6 @@ export function useNewsForm() {
       }
     }
     
-    // Now submit with proper error handling
     mutate(formData, {
       onSuccess: (data) => {
         console.log("News added successfully, response:", data);
@@ -130,7 +117,6 @@ export function useNewsForm() {
       },
       onError: (error) => {
         console.error("Failed to add news:", error);
-        // Log more detailed error information if available
         if (error.response) {
           console.error("Response data:", error.response.data);
           console.error("Response status:", error.response.status);

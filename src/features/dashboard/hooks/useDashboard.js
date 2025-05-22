@@ -8,7 +8,7 @@ export function useDashboard() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) { // tablet atau laptop (md breakpoint)
+      if (window.innerWidth >= 768) {
         setLimit(12);
       } else {
         setLimit(6);

@@ -1,9 +1,5 @@
 import { Toaster } from "sonner";
 
-/**
- * Toast provider component for application-wide notifications
- * Using sonner library for lightweight, customizable toasts
- */
 export function ToastProvider() {
   return (
     <Toaster

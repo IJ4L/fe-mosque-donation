@@ -1,12 +1,12 @@
 import { Input } from "@/components/ui/input";
 import HeroImg from "../../../assets/images/img_hero.png";
 import { useState } from "react";
-import { useLogin } from "../api/auth";
+import { useLogin } from "../api/auth.jsx";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const loginMutation = useLogin();
@@ -15,17 +15,31 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    try {
-      toast.loading("Memproses login...");
-      const result = await loginMutation.mutateAsync({ email, password });
+    const toastId = "login-toast";
 
-      if (result.success) {
-        toast.dismiss();
+    try {
+      toast.loading("Memproses login...", { id: toastId });
+      console.log("Login with credentials:", { identifier, password });
+
+      const result = await loginMutation.mutateAsync({
+        identifier,
+        password,
+      });
+
+      toast.dismiss(toastId);
+
+      if (result && result.success) {
+        console.log("Login successful:", result);
         toast.success("Login berhasil!");
         login(result.user, result.token);
+      } else {
+        console.error("Unexpected response format:", result);
+        toast.error("Format respons tidak sesuai. Silakan coba lagi.");
+        setError("Format respons tidak sesuai. Silakan coba lagi.");
       }
     } catch (error) {
-      toast.dismiss();
+      console.error("Login error:", error);
+      toast.dismiss(toastId);
       toast.error(error.message || "Login gagal. Silakan coba lagi.");
       setError(error.message || "Login gagal. Silakan coba lagi.");
     }
@@ -43,13 +57,13 @@ const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-1">
           <Input
             className="border border-black/20 rounded-lg"
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Nomer Telpon / Username"
+            type="text"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             required
           />
           <Input
@@ -68,13 +82,6 @@ const Login = () => {
             {loginMutation.isLoading ? "Memproses..." : "Masuk"}
           </button>
         </form>
-
-        {/* Helper text for testing */}
-        <div className="mt-6 text-sm text-gray-500">
-          <p>Untuk demo, gunakan:</p>
-          <p>Email: admin@mosque.com</p>
-          <p>Password: admin123</p>
-        </div>
       </div>
       <div className="flex flex-col justify-center items-center w-full h-screen bg-[#F5F5F5]">
         <img

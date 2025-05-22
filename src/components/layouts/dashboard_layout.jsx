@@ -1,11 +1,8 @@
-// filepath: f:\web\mosque-donation\src\components\layouts\dashboard_layout.jsx
 import Dashboard from "@/features/dashboard/components/dashboard";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
 import Profile from "@/features/dashboard/components/profile";
-import { Sheet } from "../ui/sheet";
 import { useState } from "react";
-import { PlusIcon } from "@radix-ui/react-icons";
 import NewsFormSheet from "@/features/dashboard/components/news-form-sheet";
 import DashboardNavigation from "../ui/dashboard-navigation";
 import { useAuth } from "@/features/auth/context/AuthContext";
@@ -38,22 +35,17 @@ const DashboardLayout = () => {
   }
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Dashboard Navigation */}
       <DashboardNavigation
         onSectionChange={handleSectionChange}
         activeSection={section}
       />
-      {/* Main Content */}
       <div className="flex-grow mx-4 md:mx-12 lg:mx-24 xl:mx-48 2xl:mx-96 pt-20">
         {section === "News" && (
           <div className="flex justify-end mb-4">
             <button
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 px-5 py-3 bg-primary-600 hover:bg-primary-700 text-black rounded-lg border border-black-600 font-semibold shadow-sm transition-all duration-300 hover:shadow-md transform hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-5 py-3 bg-primary-600 hover:bg-primary-700 text-black rounded-lg border-2 border-black-600 font-semibold shadow-sm transition-all duration-300 hover:shadow-md cursor-pointer mt-4"
             >
-              <div className="bg-white rounded-full p-1 mr-1.5">
-                <PlusIcon className="h-4 w-4 text-primary-600" />
-              </div>
               Tambah Berita
             </button>
           </div>
@@ -88,6 +80,7 @@ const DashboardLayout = () => {
           isError={isError}
           isSuccess={isSuccess}
           handleDivClick={handleDivClick}
+          handleImageChange={handleImageChange}
           handleSubmit={handleSubmit}
         />
       )}

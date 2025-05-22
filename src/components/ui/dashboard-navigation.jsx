@@ -53,7 +53,6 @@ const DashboardNavigation = ({ onSectionChange, activeSection }) => {
           </h1>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="md:flex hidden items-center">
           <ul className="flex space-x-6 font-medium">
             {navItems.map((item) => (
@@ -84,13 +83,11 @@ const DashboardNavigation = ({ onSectionChange, activeSection }) => {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
         <button className="md:hidden" onClick={toggleMobileMenu}>
           <img src={IconHamburgerMenu} alt="Menu" className="w-6 h-6" />
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"

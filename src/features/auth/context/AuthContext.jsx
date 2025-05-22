@@ -1,16 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { isAuthenticated, getCurrentUser, logoutUser } from "../api/auth";
+import { isAuthenticated, getCurrentUser, logoutUser } from "../api/auth.jsx";
 
-// Create auth context
 const AuthContext = createContext();
 
-// Auth provider component
 export const AuthProvider = ({ children, navigate }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
 
-  // Initialize auth state
   useEffect(() => {
     const initAuth = () => {
       const authenticated = isAuthenticated();
@@ -27,38 +24,33 @@ export const AuthProvider = ({ children, navigate }) => {
     initAuth();
   }, []);
 
-  // Login handler - updates context after successful login
   const login = (userData, token) => {
     setUser(userData);
     setIsAuth(true);
-    // Use window.location for navigation if navigate function is not provided
     if (navigate) {
-      navigate('/admin');
+      navigate("/admin");
     } else {
-      window.location.href = '/admin';
+      window.location.href = "/admin";
     }
   };
 
-  // Logout handler
   const logout = () => {
     logoutUser();
     setUser(null);
     setIsAuth(false);
-    // Use window.location for navigation if navigate function is not provided
     if (navigate) {
-      navigate('/login');
+      navigate("/login");
     } else {
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
   };
 
-  // Context value
   const value = {
     user,
     isAuth,
     loading,
     login,
-    logout
+    logout,
   };
 
   return (
@@ -68,13 +60,12 @@ export const AuthProvider = ({ children, navigate }) => {
   );
 };
 
-// Hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  
+
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  
+
   return context;
 };

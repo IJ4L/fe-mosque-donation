@@ -22,6 +22,7 @@ const NewsFormSheet = ({
   isError,
   isSuccess,
   handleDivClick,
+  handleImageChange,
   handleSubmit,
 }) => {
   return (
@@ -32,9 +33,6 @@ const NewsFormSheet = ({
       >
         <SheetHeader className="bg-primary-50 p-6 border-b border-gray-100">
           <div className="flex items-center mb-2">
-            <div className="bg-primary-500 rounded-full p-2 mr-3">
-              <PlusIcon className="h-5 w-5 text-white" />
-            </div>
             <SheetTitle className="text-xl font-bold text-primary-700">
               Tambah Berita Baru
             </SheetTitle>
@@ -130,26 +128,28 @@ const NewsFormSheet = ({
                       file.name,
                       file.size
                     );
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      const preview = reader.result;
-                      console.log("FileReader completed, preview ready");
-                      // Check if setImagePreview is a function before calling it
-                      if (typeof setImagePreview === "function") {
-                        console.log("Using setImagePreview function");
-                        setImagePreview(preview);
-                      } else if (typeof handleImageChange === "function") {
-                        // Fallback to handleImageChange if available
-                        console.log("Using handleImageChange function");
-                        handleImageChange(e);
-                      } else {
-                        console.log("No handler found for image preview");
-                      }
-                    };
-                    reader.onerror = () => {
-                      console.error("FileReader error:", reader.error);
-                    };
-                    reader.readAsDataURL(file);
+
+                    if (typeof handleImageChange === "function") {
+                      console.log("Using handleImageChange function");
+                      handleImageChange(e);
+                    } else {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        const preview = reader.result;
+                        console.log("FileReader completed, preview ready");
+
+                        if (typeof setImagePreview === "function") {
+                          console.log("Using setImagePreview function");
+                          setImagePreview(preview);
+                        } else {
+                          console.error("No handler found for image preview");
+                        }
+                      };
+                      reader.onerror = () => {
+                        console.error("FileReader error:", reader.error);
+                      };
+                      reader.readAsDataURL(file);
+                    }
                   } else {
                     console.log("No file selected");
                   }

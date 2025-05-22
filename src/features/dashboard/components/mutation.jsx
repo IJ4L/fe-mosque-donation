@@ -137,7 +137,6 @@ const Mutation = () => {
         )}
       </div>
 
-      {/* Pagination */}
       <div className="flex flex-col md:flex-row justify-center gap-0 md:gap-2 mt-4 mb-8">
         {renderPaginationSkeleton().show ? (
           <PaginationSkeleton />

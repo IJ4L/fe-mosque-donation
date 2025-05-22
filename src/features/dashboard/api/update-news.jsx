@@ -9,7 +9,6 @@ export function useUpdateNews() {
       try {
         console.log(`useUpdateNews - Updating news with ID: ${id}`);
 
-        // Debug FormData content
         console.log("FormData entries before sending to server:");
         for (let pair of formData.entries()) {
           if (pair[1] instanceof File) {
@@ -21,16 +20,12 @@ export function useUpdateNews() {
           }
         }
 
-        // Make the API call        // Don't manually set Content-Type for multipart/form-data
-        // The browser will set it with the correct boundary
         const response = await axios.patch(
           `http://localhost:9999/news/${id}`,
           formData,
           {
-            headers: {
-              // Allow browser to set Content-Type with proper boundaries
-            },
-            transformRequest: [(data) => data], // Prevent axios from modifying FormData
+            headers: {},
+            transformRequest: [(data) => data],
           }
         );
 

@@ -30,10 +30,10 @@ const LandingNavigation = () => {
     const section = document.getElementById(sectionId);
     if (section) {
       window.scrollTo({
-        top: section.offsetTop - 80, // Offset to account for fixed navbar
+        top: section.offsetTop - 80,
         behavior: "smooth",
       });
-      setMobileMenuOpen(false); // Close mobile menu after clicking
+      setMobileMenuOpen(false);
     }
   };
 
@@ -111,7 +111,6 @@ const LandingNavigation = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       <div
         className={`fixed inset-0 z-20 bg-black/90 transition-opacity duration-300 ease-in-out ${
           mobileMenuOpen

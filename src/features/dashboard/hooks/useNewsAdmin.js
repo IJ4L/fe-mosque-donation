@@ -2,13 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useNews, useNewsById } from "../api/get-news";
 import { useUpdateNews } from "../api/update-news";
 import { useDeleteNews } from "../api/delete-news";
-import { formatImageUrl } from "@/lib/imageUtils";
-import { logFormData } from "@/debug-form-data";
 import { toast } from "sonner";
 
 export function useNewsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(5); // Default limit per page
+  const [limit, setLimit] = useState(5);
   const { data, isLoading, error } = useNews(currentPage, limit);
   const [editingNewsId, setEditingNewsId] = useState(null);
   const [deletingNewsId, setDeletingNewsId] = useState(null);
@@ -36,7 +34,6 @@ export function useNewsAdmin() {
         const imgPath = editingNews.data.newsImage;
         console.log("News image path:", imgPath);
         
-        // Handle image path properly - check if it already has http:// or starts with /
         const formattedPath = imgPath.startsWith('http') 
           ? imgPath 
           : `http://localhost:9999${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
@@ -127,14 +124,11 @@ export function useNewsAdmin() {
     
     const formData = new FormData();
 
-    // Only append image if there's a new file selected
     if (fileInputRef.current && fileInputRef.current.files[0]) {
       const file = fileInputRef.current.files[0];
-      
-      // Log the file details
+
       console.log(`Update - File selected: ${file.name} (${file.size} bytes, ${file.type})`);
 
-      // Validate file
       if (file.size === 0) {
         toast.dismiss();
         toast.error("File gambar kosong atau rusak");
@@ -142,15 +136,13 @@ export function useNewsAdmin() {
         return;
       }
 
-      // Check if it's an image
       if (!file.type.startsWith('image/')) {
         toast.dismiss();
         toast.error("File bukan gambar valid");
         setIsSubmitting(false);
         return;
       }
-      
-      // Clean filename to prevent special character issues
+
       const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, '_');
       const cleanedFile = new File([file], cleanFileName, { type: file.type });
       
@@ -158,16 +150,12 @@ export function useNewsAdmin() {
     } else {
       console.log("No new image file selected, keeping existing image");
     }
-    // No need for an else clause - if no new image is provided, the backend will keep the existing one
 
     formData.append("newsAuthor", 1);
     formData.append("newsName", title);
     formData.append("newsDescription", description);
 
     const newsId = String(editingNewsId).trim();
-    
-    // Log the form data to verify structure
-    logFormData(formData);
 
     updateNews(
       { id: newsId, formData },
