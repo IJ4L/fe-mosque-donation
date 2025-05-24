@@ -82,15 +82,18 @@ const NewsAdmin = () => {
               key={newsItem.newsID}
               className="flex flex-col md:flex-row space mb-4 space-y-2 md:space-y-0 md:space-x-4"
             >
-              {" "}
-              <img
-                className="md:w-1/2 w-full object-cover h-40 md:h-60 rounded-lg aspect-video"
-                src={formatImageUrl(newsItem.newsImage)}
-                alt={newsItem.newsName}
-                onError={(e) => handleImageError(e, `News+${newsItem.newsID}`)}
-                loading="lazy"
-                decoding="async"
-              />
+              <div className="md:w-1/2 w-full object-cover h-40 md:h-60 rounded-lg aspect-video">
+                <img
+                  className="object-cover rounded-lg aspect-video"
+                  src={formatImageUrl(newsItem.newsImage)}
+                  alt={newsItem.newsName}
+                  onError={(e) =>
+                    handleImageError(e, `News+${newsItem.newsID}`)
+                  }
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="w-full flex items-center justify-between gap-6 bg-gray-100 rounded-lg py-4 px-6">
                 <div className="text-justify line-clamp-6">
                   <h3 className="font-semibold text-lg mb-2">

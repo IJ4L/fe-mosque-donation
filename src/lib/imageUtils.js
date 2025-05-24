@@ -1,5 +1,5 @@
 
-export function formatImageUrl(imagePath, baseUrl = 'http://localhost:9999') {
+export function formatImageUrl(imagePath, baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:9999') {
   console.log("formatImageUrl - Received path:", imagePath);
   
   if (!imagePath) {

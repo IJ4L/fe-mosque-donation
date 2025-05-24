@@ -1,9 +1,9 @@
 import { Input } from "@/components/ui/input";
-import HeroImg from "../../../assets/images/img_hero.png";
 import { useState } from "react";
 import { useLogin } from "../api/auth.jsx";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "sonner";
+import HeroImg from "../../../assets/images/img_hero.png";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState("");

@@ -1,3 +1,4 @@
+import { API_URL } from "@/config/env";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ export function useUpdateNews() {
         }
 
         const response = await axios.patch(
-          `http://localhost:9999/news/${id}`,
+          `${API_URL}/news/${id}`,
           formData,
           {
             headers: {},

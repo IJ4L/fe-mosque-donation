@@ -1,10 +1,11 @@
+import { API_URL } from "@/config/env";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 const updatePassword = async ({ userId, currentPassword, newPassword }) => {
   try {
     const response = await axios.put(
-      `http://localhost:9999/auth/password/${userId}`,
+      `${API_URL}/auth/password/${userId}`,
       {
         currentPassword,
         newPassword,

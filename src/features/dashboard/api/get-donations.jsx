@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "../../../config/env";
 
 const fetchDonations = async ({ page = 1, limit = 5 }) => {
   const response = await axios.get(
-    `http://localhost:9999/donations?page=${page}&limit=${limit}`
+    `${API_URL}/donations?page=${page}&limit=${limit}`
   );
   return response.data;
 };

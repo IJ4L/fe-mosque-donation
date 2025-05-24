@@ -122,15 +122,7 @@ const DashboardNavigation = ({ onSectionChange, activeSection }) => {
                 >
                   {item.label}
                 </li>
-              ))}{" "}
-              <li className="pt-4 border-t border-gray-200">
-                <button
-                  onClick={openLogoutDialog}
-                  className="cursor-pointer w-full text-left px-3 py-2 text-red-700 hover:bg-red-50 rounded transition-colors"
-                >
-                  Logout
-                </button>
-              </li>
+              ))}
             </ul>
           </div>
         </div>

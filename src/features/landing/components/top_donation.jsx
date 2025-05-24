@@ -1,18 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
 import ImageIslamic from "../../../assets/images/img_islamic.svg";
 import IconCrown from "../../../assets/icons/ic_crown.svg";
-import { fetchTopDonations } from "../api/donations";
+import { useTopDonations } from "../api/donations.jsx";
 
 function TopDonation() {
-  // Use the useQuery hook to fetch data
-  const {
-    isPending,
-    error,
-    data: donations,
-  } = useQuery({
-    queryKey: ["topDonations"],
-    queryFn: fetchTopDonations,
-  });
+  const { data, isLoading: isPending, error } = useTopDonations();
+
+  // Debugging the response structure
+  console.log("Top donations data:", data);
+
+  // Ensure donations is an array
+  const donations = Array.isArray(data)
+    ? data
+    : data && Array.isArray(data.data)
+      ? data.data
+      : [];
 
   return (
     <div
@@ -33,17 +34,18 @@ function TopDonation() {
           Menampilkan daftar nama para donatur dengan kontribusi sebagai bentuk
           apresiasi bagi jamaah untuk lebih giat bersedekah dalam mendukung
           kegiatan masjid.
-        </p>
-
+        </p>{" "}
         {isPending ? (
           <div className="mt-6">Memuat data donasi...</div>
         ) : error ? (
           <div className="mt-6 text-red-500">Error: {error.message}</div>
+        ) : !donations || donations.length === 0 ? (
+          <div className="mt-6">Tidak ada data donasi untuk ditampilkan</div>
         ) : (
           <ul className="w-full flex flex-col items-center justify-center md:mt-6 xl:mt-12 space-y-4 mt-6">
             {donations.map((donation, index) => (
               <li
-                key={donation.id}
+                key={donation.donationID}
                 className={`flex justify-center items-center gap-2 py-2 md:py-3 xl:py-4 w-2/3 md:w-2/5 lg:w-1/3 ${
                   index === 0
                     ? "bg-primary-700 border border-primary-700 text-white"
@@ -54,7 +56,7 @@ function TopDonation() {
                   <img className="size-7" src={IconCrown} alt="ic_crown.svg" />
                 )}
                 <p className="font-medium text-sm md:text-base">
-                  {donation.name}
+                  {donation.donaturName}
                 </p>
               </li>
             ))}

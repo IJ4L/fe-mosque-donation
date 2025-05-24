@@ -32,18 +32,14 @@ if ("serviceWorker" in navigator) {
 }
 
 initWorker();
-// Set up authentication interceptor for all API requests
 setupAuthInterceptor();
 
-// Store the root in a variable to prevent multiple createRoot calls
 let root;
 
-// Create root only once
 if (!root) {
   root = createRoot(document.getElementById("root"));
 }
 
-// Render the app
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

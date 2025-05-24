@@ -2,11 +2,11 @@ import Dashboard from "@/features/dashboard/components/dashboard";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
 import Profile from "@/features/dashboard/components/profile";
-import { useState } from "react";
 import NewsFormSheet from "@/features/dashboard/components/news-form-sheet";
 import DashboardNavigation from "../ui/dashboard-navigation";
 import { useAuth } from "@/features/auth/context/AuthContext";
 import { useNewsForm } from "@/features/dashboard/hooks/useNewsForm";
+import { useState } from "react";
 
 const DashboardLayout = () => {
   const [section, setSection] = useState("Dashboard");
@@ -44,7 +44,7 @@ const DashboardLayout = () => {
           <div className="flex justify-end mb-4">
             <button
               onClick={() => setOpen(true)}
-              className="flex items-center gap-2 px-5 py-3 bg-primary-600 hover:bg-primary-700 text-black rounded-lg border-2 border-black-600 font-semibold shadow-sm transition-all duration-300 hover:shadow-md cursor-pointer mt-4"
+              className="flex items-center gap-2 px-3 text-md py-2 bg-primary-600 hover:bg-primary-700 text-black rounded-lg border-2 border-black-600 font-semibold shadow-sm transition-all duration-300 hover:shadow-md cursor-pointer mt-4"
             >
               Tambah Berita
             </button>

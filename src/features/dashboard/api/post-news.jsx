@@ -1,3 +1,4 @@
+import { API_URL } from "@/config/env";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -17,14 +18,10 @@ export function usePostNews() {
           console.log(`FormData contains ${pair[0]}: ${pair[1]}`);
         }
       }
-      const response = await axios.post(
-        "http://localhost:9999/news",
-        formData,
-        {
-          headers: {},
-          transformRequest: [(data) => data],
-        }
-      );
+      const response = await axios.post(`${API_URL}/news`, formData, {
+        headers: {},
+        transformRequest: [(data) => data],
+      });
 
       console.log("usePostNews - Response received:", response.data);
       return response.data;

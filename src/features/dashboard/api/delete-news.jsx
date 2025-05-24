@@ -1,3 +1,4 @@
+import { API_URL } from "@/config/env";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -7,7 +8,7 @@ export function useDeleteNews() {
   return useMutation({
     mutationFn: async (id) => {
       try {
-        const response = await axios.delete(`http://localhost:9999/news/${id}`);
+        const response = await axios.delete(`${API_URL}/news/${id}`);
         return response.data;
       } catch (error) {
         throw error;

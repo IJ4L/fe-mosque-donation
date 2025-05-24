@@ -1,13 +1,26 @@
 import ImageZakat from "../../../assets/images/img_zakat.svg";
 import ImageFlower from "../../../assets/images/img_flower.svg";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useDonationForm } from "../hooks/useDonationForm.jsx";
 
 const Donate = () => {
-  const [donationAmount, setDonationAmount] = useState(0);
-  const [donorName, setDonorName] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
-  const [donationMessage, setDonationMessage] = useState("");
+  const {
+    donationAmount,
+    setDonationAmount,
+    donorName,
+    setDonorName,
+    donorEmail,
+    setDonorEmail,
+    donationMessage,
+    setDonationMessage,
+    error,
+    successInfo,
+    formRef,
+    isSubmitting,
+    donationMutation,
+    handleSubmit,
+    resetForm,
+  } = useDonationForm();
 
   return (
     <div
@@ -34,24 +47,28 @@ const Donate = () => {
               <h3 className="font-semibold text-2xl">Berikan Donasimu</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2 2xl:space-x-4 mt-4">
                 <button
+                  type="button"
                   onClick={() => setDonationAmount(10000)}
                   className="h-12 bg-secondary-700/80 rounded-lg cursor-pointer hover:bg-secondary-700"
                 >
                   10.000
                 </button>
                 <button
+                  type="button"
                   onClick={() => setDonationAmount(20000)}
                   className="h-12 bg-secondary-700/80 rounded-lg cursor-pointer hover:bg-secondary-700"
                 >
                   20.000
                 </button>
                 <button
+                  type="button"
                   onClick={() => setDonationAmount(50000)}
                   className="h-12 bg-secondary-700/80 rounded-lg cursor-pointer hover:bg-secondary-700"
                 >
                   50.000
                 </button>
                 <button
+                  type="button"
                   onClick={() => setDonationAmount(100000)}
                   className="h-12 bg-secondary-700/80 rounded-lg cursor-pointer hover:bg-secondary-700"
                 >
@@ -59,7 +76,7 @@ const Donate = () => {
                 </button>
               </div>
             </div>
-            <form className="mt-4">
+            <form ref={formRef} className="mt-4" onSubmit={handleSubmit}>
               <Input
                 type="number"
                 label="Rp"
@@ -96,20 +113,45 @@ const Donate = () => {
                 onChange={(e) => setDonationMessage(e.target.value)}
                 className="flex-col space-y-2"
               />
+
+              {error && (
+                <div className="text-red-500 text-sm mt-4 mb-2">{error}</div>
+              )}
+
+              {donationMutation.isError && !error && (
+                <div className="text-red-500 text-sm mt-4 mb-2">
+                  {donationMutation.error?.message ||
+                    "Terjadi kesalahan pada server. Silahkan coba lagi."}
+                </div>
+              )}
+
+              {successInfo && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4 mb-2">
+                  <strong className="font-bold">Sukses!</strong>
+                  <span className="block sm:inline">
+                    {" "}
+                    {successInfo.message}
+                  </span>
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={!donationAmount || !donorName || !donorEmail}
-                className={`w-full md:w-32 h-12 rounded-lg font-semibold transition
+                disabled={
+                  isSubmitting || !donationAmount || !donorName || !donorEmail
+                }
+                className={`w-full md:w-32 h-12 rounded-lg font-semibold transition mt-4
                 ${
+                  isSubmitting ||
                   !donationAmount ||
-                  !donationAmount > 1 ||
+                  donationAmount < 1 ||
                   !donorName ||
                   !donorEmail
                     ? "bg-gray-200 cursor-not-allowed opacity-50"
                     : "bg-secondary-600 hover:bg-secondary-700 cursor-pointer"
                 }`}
               >
-                Donasi
+                {isSubmitting ? "Memproses..." : "Donasi"}
               </button>
             </form>
           </div>
@@ -132,3 +174,4 @@ const Donate = () => {
 };
 
 export default Donate;
+

@@ -42,8 +42,8 @@ const NewsFormSheet = ({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <div className="mb-6">
+        <form onSubmit={handleSubmit} className="px-6">
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Gambar Berita
             </label>
@@ -52,7 +52,6 @@ const NewsFormSheet = ({
                 rounded-lg p-6 text-center cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:border-primary-400`}
               onClick={handleDivClick}
             >
-              {" "}
               {imagePreview ? (
                 <div className="mb-2">
                   <img

@@ -1,8 +1,7 @@
-// filepath: f:\web\mosque-donation\src\features\auth\api\auth.jsx
+import { API_URL } from "@/config/env";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-// Auth storage keys
 const TOKEN_KEY = "mosque_auth_token";
 const USER_DATA_KEY = "mosque_user_data";
 
@@ -44,13 +43,13 @@ export const useLogin = () => {
         console.log("Making login request with:", credentials);
 
         const response = await axios.post(
-          "http://localhost:9999/auth/login",
+          `${API_URL}/auth/login`,
           credentials,
           {
             headers: {
               "Content-Type": "application/json",
             },
-            timeout: 10000, // 10 seconds timeout
+            timeout: 10000,
           }
         );
 
