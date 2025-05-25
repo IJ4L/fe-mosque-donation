@@ -127,7 +127,7 @@ export const fetchPrayerTimes = async () => {
       date: data.data.date.readable,
     };
   } catch (error) {
-    console.error("Prayer times API error:", error);
+
     throw error;
   }
 };

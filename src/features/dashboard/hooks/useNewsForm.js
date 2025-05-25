@@ -16,17 +16,17 @@ export function useNewsForm() {
   const handleImageChange = (e) => {
     const file = e.target?.files?.[0];
     if (file) {
-      console.log("handleImageChange: File selected:", file.name);
+
       try {
         const objectUrl = URL.createObjectURL(file);
-        console.log("Preview URL created:", objectUrl);
+
         setImagePreview(objectUrl);
       } catch (error) {
-        console.error("Error creating object URL:", error);
+
         toast.error("Error creating image preview");
       }
     } else {
-      console.log("handleImageChange: No file selected");
+
     }
   };
 
@@ -74,7 +74,7 @@ export function useNewsForm() {
         throw new Error("File bukan gambar. Silakan pilih gambar yang valid");
       }
       
-      console.log(`File selected: ${file.name} (${file.size} bytes, ${file.type})`);
+
       
       const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, '_');
       const cleanedFile = new File([file], cleanFileName, { type: file.type });
@@ -87,24 +87,24 @@ export function useNewsForm() {
       
       
     } catch (error) {
-      console.error('Error preparing form data:', error);
+
       toast.dismiss();
       toast.error("Gagal menyiapkan data: " + error.message);
       return;
     }
     
-    console.log('FormData entries:');
+
     for (let pair of formData.entries()) {
       if (pair[1] instanceof File) {
-        console.log(pair[0], pair[1].name, pair[1].size);
+
       } else {
-        console.log(pair[0], pair[1]);
+
       }
     }
     
     mutate(formData, {
       onSuccess: (data) => {
-        console.log("News added successfully, response:", data);
+
         toast.dismiss();
         toast.success("Berita berhasil ditambahkan!");
         setOpen(false);
@@ -116,11 +116,11 @@ export function useNewsForm() {
         }
       },
       onError: (error) => {
-        console.error("Failed to add news:", error);
+
         if (error.response) {
-          console.error("Response data:", error.response.data);
-          console.error("Response status:", error.response.status);
-          console.error("Response headers:", error.response.headers);
+
+
+
         }
         toast.dismiss();
         toast.error(

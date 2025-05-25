@@ -28,10 +28,8 @@ export function initWorker() {
 }
 
 // Execute an operation in the worker
-export function executeWorkerOperation(operation, data) {
-  if (!worker && !initWorker()) {
+export function executeWorkerOperation(operation, data) {  if (!worker && !initWorker()) {
     // Fallback if web workers aren't supported
-    console.warn('Web Workers not supported, falling back to main thread execution');
     return Promise.reject(new Error('Web Workers not supported'));
   }
   

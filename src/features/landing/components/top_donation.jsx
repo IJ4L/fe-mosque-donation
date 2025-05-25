@@ -5,10 +5,6 @@ import { useTopDonations } from "../api/donations.jsx";
 function TopDonation() {
   const { data, isLoading: isPending, error } = useTopDonations();
 
-  // Debugging the response structure
-  console.log("Top donations data:", data);
-
-  // Ensure donations is an array
   const donations = Array.isArray(data)
     ? data
     : data && Array.isArray(data.data)

@@ -60,7 +60,7 @@ const DashboardLayout = () => {
 
       <footer className="right-0 bottom-0 left-0 flex flex-col md:flex-row justify-between items-center py-4 px-8 md:px-20 xl:px-40 2xl:px-96 space-y-3 md:space-y-0 mt-auto bg-black text-white">
         <p className="text-center md:text-start">
-          © 2023 Masjid Ibnu Sina. All rights reserved.
+          © 2023 Markaz Ulul Ilmi. All rights reserved.
         </p>
         <p className="hover:underline cursor-pointer">Privacy Policy</p>
       </footer>

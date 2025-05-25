@@ -19,7 +19,7 @@ const Login = () => {
 
     try {
       toast.loading("Memproses login...", { id: toastId });
-      console.log("Login with credentials:", { identifier, password });
+
 
       const result = await loginMutation.mutateAsync({
         identifier,
@@ -29,16 +29,16 @@ const Login = () => {
       toast.dismiss(toastId);
 
       if (result && result.success) {
-        console.log("Login successful:", result);
+
         toast.success("Login berhasil!");
         login(result.user, result.token);
       } else {
-        console.error("Unexpected response format:", result);
+
         toast.error("Format respons tidak sesuai. Silakan coba lagi.");
         setError("Format respons tidak sesuai. Silakan coba lagi.");
       }
     } catch (error) {
-      console.error("Login error:", error);
+
       toast.dismiss(toastId);
       toast.error(error.message || "Login gagal. Silakan coba lagi.");
       setError(error.message || "Login gagal. Silakan coba lagi.");

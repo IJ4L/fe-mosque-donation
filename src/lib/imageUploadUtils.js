@@ -46,9 +46,8 @@ export function revokeBlobUrl(blobUrl) {
   if (blobUrl && blobUrl.startsWith('blob:')) {
     try {
       URL.revokeObjectURL(blobUrl);
-      console.log('Revoked blob URL:', blobUrl);
     } catch (error) {
-      console.error('Error revoking blob URL:', error);
+
     }
   }
 }

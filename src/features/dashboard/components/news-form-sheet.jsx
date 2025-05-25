@@ -59,10 +59,7 @@ const NewsFormSheet = ({
                     alt="Preview"
                     className="max-h-64 mx-auto rounded shadow-sm object-cover"
                     onError={(e) => {
-                      console.error(
-                        "Image preview failed to load:",
-                        imagePreview
-                      );
+                      // Handle image load error silently
                       e.target.onerror = null;
 
                       let errorMessage = "Error+Loading+Preview";
@@ -119,38 +116,24 @@ const NewsFormSheet = ({
                 accept="image/*"
                 ref={fileInputRef}
                 onChange={(e) => {
-                  console.log("File input change event triggered");
                   const file = e.target.files[0];
                   if (file) {
-                    console.log(
-                      "File selected in news-form-sheet:",
-                      file.name,
-                      file.size
-                    );
-
                     if (typeof handleImageChange === "function") {
-                      console.log("Using handleImageChange function");
                       handleImageChange(e);
                     } else {
                       const reader = new FileReader();
                       reader.onloadend = () => {
                         const preview = reader.result;
-                        console.log("FileReader completed, preview ready");
 
                         if (typeof setImagePreview === "function") {
-                          console.log("Using setImagePreview function");
                           setImagePreview(preview);
                         } else {
-                          console.error("No handler found for image preview");
                         }
                       };
-                      reader.onerror = () => {
-                        console.error("FileReader error:", reader.error);
-                      };
+                      reader.onerror = () => {};
                       reader.readAsDataURL(file);
                     }
                   } else {
-                    console.log("No file selected");
                   }
                 }}
                 style={{ display: "none" }}

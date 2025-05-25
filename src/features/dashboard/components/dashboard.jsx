@@ -6,6 +6,9 @@ import { formatCurrency, formatDate, formatTime } from "@/lib/utils";
 import DonationItemSkeleton from "@/components/ui/skeletons/DonationItemSkeleton";
 import PaginationSkeleton from "@/components/ui/skeletons/PaginationSkeleton";
 import { useDashboard } from "../hooks/useDashboard";
+import { useMutationSummary } from "../api/get-summary";
+import { usePayoutForm } from "../hooks/usePayoutForm";
+import PayoutDialog from "./PayoutDialog";
 
 const Dashboard = () => {
   const {
@@ -22,18 +25,44 @@ const Dashboard = () => {
     renderPaginationSkeleton,
   } = useDashboard();
 
+  const {
+    data: balanceData,
+    isLoading: isBalanceLoading,
+    refetch: refetchBalance,
+  } = useMutationSummary();
+
+  const {
+    isPayoutDialogOpen,
+    setIsPayoutDialogOpen,
+    payoutAmount,
+    setPayoutAmount,
+    payoutDescription,
+    setPayoutDescription,
+    isSubmitting,
+    payoutError,
+    payoutSuccess,
+    handlePayoutSubmit,
+  } = usePayoutForm(refetchBalance);
+
   return (
     <>
+      {" "}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex items-center px-4 md:px-12 gap-3 w-full md:w-1/2 py-4 md:py-2 bg-primary-600 border-2 border-black-600 rounded-lg">
           {" "}
           <div className="flex flex-col gap-2 md:gap-4">
             <div className="font-regular text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center md:text-start">
-              Rp 536.000
+              {isBalanceLoading ? (
+                <div className="h-10 bg-primary-500 rounded w-32 animate-pulse"></div>
+              ) : balanceData?.data?.balance ? (
+                formatCurrency(balanceData.data.balance)
+              ) : (
+                "Rp 0"
+              )}
             </div>
             <div className="text-center md:text-start text-xs sm:text-sm md:text-base">
               Angka di atas adalah total saldo kamu. Setiap transaksi harus
-              menunggu 3 hari untuk bisa dicairkan.
+              menunggu 1 hari untuk bisa dicairkan.
             </div>
           </div>
           <img
@@ -46,14 +75,31 @@ const Dashboard = () => {
           {" "}
           <div className="flex flex-col gap-4">
             <div className="font-regular text-xl sm:text-2xl md:text-3xl lg:text-4xl">
-              Rp 536.000
+              {isBalanceLoading ? (
+                <div className="h-10 bg-secondary-500 rounded w-32 animate-pulse"></div>
+              ) : balanceData?.data?.withdrawableBalance ? (
+                formatCurrency(balanceData.data.withdrawableBalance)
+              ) : (
+                "Rp 0"
+              )}
             </div>
             <div className="text-center md:text-start text-xs sm:text-sm md:text-base">
-              Setiap transaksi harus menunggu 3 hari untuk bisa dicairkan.
+              Setiap pencairan dapat diterima 1 kali 24 jam.
             </div>
-            <button className="w-full md:w-30 bg-primary-600 text-black px-8 hover:bg-primary-700 py-2 rounded-lg border-2 border-black-600 font-semibold text-sm md:text-md transition duration-300 cursor-pointer">
-              Cairkan
-            </button>
+
+            <PayoutDialog
+              isOpen={isPayoutDialogOpen}
+              setIsOpen={setIsPayoutDialogOpen}
+              withdrawableBalance={balanceData?.data?.withdrawableBalance}
+              payoutAmount={payoutAmount}
+              setPayoutAmount={setPayoutAmount}
+              payoutDescription={payoutDescription}
+              setPayoutDescription={setPayoutDescription}
+              payoutError={payoutError}
+              payoutSuccess={payoutSuccess}
+              isSubmitting={isSubmitting}
+              handleSubmit={handlePayoutSubmit}
+            />
           </div>
           <img
             className="hidden md:flex size-24 xl:size-36"

@@ -12,18 +12,18 @@ export const fetchNews = async (limit = 4) => {
       `http://localhost:9999/news?page=1&limit=${limit}`
     );
 
-    console.log("News API response:", response.data);
+
 
     if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     } else if (Array.isArray(response.data)) {
       return response.data;
     } else {
-      console.log("Unexpected news API response structure:", response.data);
+
       throw new Error("Unexpected news response structure");
     }
   } catch (error) {
-    console.error("Error fetching news:", error);
+
     return [
       {
         newsID: 1,
@@ -79,7 +79,7 @@ export const useNewsLanding = (limit = 4) => {
     refetchOnWindowFocus: false,
     retry: 2,
     onError: (error) => {
-      console.error("Error in news landing query:", error);
+
     },
   });
 };

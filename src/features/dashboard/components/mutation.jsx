@@ -107,33 +107,48 @@ const Mutation = () => {
             Tidak ada mutasi untuk ditampilkan
           </div>
         ) : (
-          data.data.mutations.map((mutation) => (
-            <div
-              key={mutation.mutationID}
-              className={`flex justify-between ${
-                mutation.mutationType === "Income" ? "bg-green-50" : "bg-red-50"
-              } border-2 border-black-600 rounded-lg px-6 py-4 shadow-md mt-4 hover:shadow-lg transition-all`}
-            >
-              <div className="flex flex-col">
-                <p
-                  className={`font-semibold text-lg ${
-                    mutation.mutationType === "Income"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }`}
-                >
-                  {mutation.mutationType === "Income" ? "+ " : "- "}
-                  {formatCurrency(mutation.mutationAmount)}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {mutation.mutationDescription}
-                </p>
+          data.data.mutations.map((mutation) => {
+            let bgColor =
+              mutation.mutationType === "Income" ? "bg-green-50" : "bg-red-50";
+            if (mutation.mutationStatus === "pending") {
+              bgColor = "bg-yellow-50";
+            }
+
+            let textColor =
+              mutation.mutationType === "Income"
+                ? "text-green-600"
+                : "text-red-600";
+            if (mutation.mutationStatus === "pending") {
+              textColor = "text-yellow-600";
+            }
+
+            return (
+              <div
+                key={mutation.mutationID}
+                className={`flex justify-between ${bgColor} border-2 border-black-600 rounded-lg px-6 py-4 shadow-md mt-4 hover:shadow-lg transition-all`}
+              >
+                <div className="flex flex-col">
+                  <div className="flex items-center">
+                    <p className={`font-semibold text-lg ${textColor}`}>
+                      {mutation.mutationType === "Income" ? "+ " : "- "}
+                      {formatCurrency(mutation.mutationAmount)}
+                    </p>
+                    {mutation.mutationStatus === "pending" && (
+                      <span className="ml-2 px-2 py-0.5 text-xs bg-yellow-200 text-yellow-800 rounded-full">
+                        Pending
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {mutation.mutationDescription}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <p>{formatDate(mutation.createdAt)}</p>
+                </div>
               </div>
-              <div className="flex items-center">
-                <p>{formatDate(mutation.createdAt)}</p>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

@@ -37,7 +37,7 @@ export const usePrayerTimes = () => {
     },
     onError: () => {
       // We no longer need this fallback since we set the date initially
-      console.error("Error fetching prayer times, using fallback data");
+
     }
   });
 
@@ -61,7 +61,7 @@ export const usePrayerTimes = () => {
           setCurrentPrayer(current);
           setNextPrayer(next);
         } catch (err) {
-          console.error("Error updating prayer info:", err);
+
         }
       }
     };    updateTimeAndPrayers();

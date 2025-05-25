@@ -25,23 +25,23 @@ export function useNewsAdmin() {
   const { mutate: updateNews } = useUpdateNews();
   const { mutate: deleteNews } = useDeleteNews();  useEffect(() => {
     if (editingNews && editingNews.data) {
-      console.log("Editing news data:", editingNews.data);
+
       
       setTitle(editingNews.data.newsName || "");
       setDescription(editingNews.data.newsDescription || "");
       
       if (editingNews.data.newsImage) {
         const imgPath = editingNews.data.newsImage;
-        console.log("News image path:", imgPath);
+
         
         const formattedPath = imgPath.startsWith('http') 
           ? imgPath 
           : `http://localhost:9999${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
         
-        console.log("Formatted image path:", formattedPath);
+
         setImagePreview(formattedPath);
       } else {
-        console.log("No image path in edited news");
+
       }
     }
   }, [editingNews]);
@@ -87,7 +87,7 @@ export function useNewsAdmin() {
       onError: (error) => {
         toast.dismiss();
         toast.error(`Gagal menghapus berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`);
-        console.error("Delete error:", error);
+
         setIsDeleting(false);
       },
     });
@@ -127,7 +127,7 @@ export function useNewsAdmin() {
     if (fileInputRef.current && fileInputRef.current.files[0]) {
       const file = fileInputRef.current.files[0];
 
-      console.log(`Update - File selected: ${file.name} (${file.size} bytes, ${file.type})`);
+
 
       if (file.size === 0) {
         toast.dismiss();
@@ -148,7 +148,7 @@ export function useNewsAdmin() {
       
       formData.append("newsImage", cleanedFile);
     } else {
-      console.log("No new image file selected, keeping existing image");
+
     }
 
     formData.append("newsAuthor", 1);
@@ -175,7 +175,7 @@ export function useNewsAdmin() {
         onError: (error) => {
           toast.dismiss();
           toast.error(`Gagal memperbarui berita: ${error.response?.data?.message || error.message || "Terjadi kesalahan"}`);
-          console.error("Update error:", error);
+
           setIsSubmitting(false);
         },
       }

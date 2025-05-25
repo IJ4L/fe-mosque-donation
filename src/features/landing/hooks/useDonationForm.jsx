@@ -46,11 +46,11 @@ export const useDonationForm = () => {
         donaturMessage: donationMessage || "",
       };
 
-      console.log("Submitting donation:", donationData);
+
 
       const response = await donationMutation.mutateAsync(donationData);
 
-      console.log("Donation response:", response);
+
 
       if (response.data && response.data.redirect) {
         setSuccessInfo({
@@ -68,7 +68,7 @@ export const useDonationForm = () => {
         resetForm();
       }
     } catch (err) {
-      console.error("Donation error:", err);
+
       setError(err.message || "Gagal membuat donasi. Silahkan coba lagi.");
     }
   };

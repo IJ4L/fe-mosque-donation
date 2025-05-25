@@ -26,7 +26,7 @@ export const submitDonation = async (donationData) => {
 
     return response.data;
   } catch (error) {
-    console.error("Donation submission error:", error);
+
     if (error.response) {
       throw new Error(
         error.response.data.message || "Server error during donation submission"
@@ -49,10 +49,10 @@ export const useDonationSubmit = () => {
   return useMutation({
     mutationFn: submitDonation,
     onSuccess: (data) => {
-      console.log("Donation successful:", data);
+
     },
     onError: (error) => {
-      console.error("Donation submission error in mutation:", error);
+
     },
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
@@ -64,18 +64,18 @@ export const fetchTopDonations = async () => {
     try {
       const response = await axios.get("http://localhost:9999/donations/top");
 
-      console.log("API response structure:", response);
+
 
       if (response.data && Array.isArray(response.data.data)) {
         return response.data.data;
       } else if (Array.isArray(response.data)) {
         return response.data;
       } else {
-        console.log("Unexpected API response structure:", response.data);
+
         throw new Error("Unexpected response structure");
       }
     } catch (apiError) {
-      console.log("Using fallback data for top donations:", apiError.message);
+
       return [
         {
           donationID: 1,
@@ -105,7 +105,7 @@ export const fetchTopDonations = async () => {
       ];
     }
   } catch (error) {
-    console.error("Error fetching top donations:", error);
+
     throw new Error("Failed to fetch top donations");
   }
 };
@@ -146,7 +146,7 @@ export const useTopDonations = () => {
       },
     ],
     onError: (error) => {
-      console.error("Error in top donations query:", error);
+
     },
     select: (data) => {
       if (Array.isArray(data)) {
@@ -155,7 +155,7 @@ export const useTopDonations = () => {
       else if (data && Array.isArray(data.data)) {
         return data.data;
       } else {
-        console.error("Unexpected data structure:", data);
+
         return [];
       }
     },

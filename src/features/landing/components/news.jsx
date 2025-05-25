@@ -65,7 +65,7 @@ const News = () => {
       const date = parseISO(dateString);
       return format(date, "MMMM, dd yyyy");
     } catch (error) {
-      console.error("Date formatting error:", error);
+
       return dateString;
     }
   };
