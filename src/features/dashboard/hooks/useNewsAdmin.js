@@ -3,6 +3,7 @@ import { useNews, useNewsById } from "../api/get-news";
 import { useUpdateNews } from "../api/update-news";
 import { useDeleteNews } from "../api/delete-news";
 import { toast } from "sonner";
+import { API_URL } from "@/config/env";
 
 export function useNewsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,7 +37,7 @@ export function useNewsAdmin() {
         
         const formattedPath = imgPath.startsWith('http') 
           ? imgPath 
-          : `http://localhost:9999${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
+          : `${API_URL}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
         
 
         setImagePreview(formattedPath);

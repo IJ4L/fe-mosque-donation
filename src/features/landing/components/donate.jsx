@@ -2,15 +2,22 @@ import ImageZakat from "../../../assets/images/img_zakat.svg";
 import ImageFlower from "../../../assets/images/img_flower.svg";
 import { Input } from "@/components/ui/input";
 import { useDonationForm } from "../hooks/useDonationForm.jsx";
+import { formatCurrency } from "@/lib/utils";
 
 const Donate = () => {
+  // Helper function to format and display rupiah amount
+  const formatRupiah = (amount) => {
+    if (!amount) return "";
+    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const {
     donationAmount,
     setDonationAmount,
     donorName,
     setDonorName,
-    donorEmail,
-    setDonorEmail,
+    donorNumber,
+    setDonorNumber,
     donationMessage,
     setDonationMessage,
     error,
@@ -78,30 +85,44 @@ const Donate = () => {
             </div>
             <form ref={formRef} className="mt-4" onSubmit={handleSubmit}>
               <Input
-                type="number"
+                type="text"
                 label="Rp"
                 placeholder="Masukkan Nominal Donasi"
                 isRequired="true"
-                value={donationAmount}
-                onChange={(e) => setDonationAmount(e.target.value)}
+                value={formatRupiah(donationAmount)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, "");
+                  if (value && !isNaN(value)) {
+                    setDonationAmount(Math.min(parseInt(value), 100000000));
+                  } else {
+                    setDonationAmount("");
+                  }
+                }}
                 className="flex-row items-center space-x-4"
               />
               <Input
                 type="text"
                 label="Nama Lengkap"
-                placeholder="Masukkan Nama Lengkap"
-                isRequired="true"
+                placeholder="Masukkan Nama Lengkap (opsional)"
+                isRequired={false}
+                maxLength="50"
                 value={donorName}
                 onChange={(e) => setDonorName(e.target.value)}
                 className="flex-col space-y-2"
               />
               <Input
-                type="email"
-                label="Email"
-                placeholder="Masukkan Email"
-                isRequired="true"
-                value={donorEmail}
-                onChange={(e) => setDonorEmail(e.target.value)}
+                type="tel"
+                label="Nomor Telepon"
+                placeholder="Masukkan Nomor Telepon (opsional)"
+                isRequired={false}
+                pattern="[0-9]{10,15}"
+                maxLength="15"
+                value={donorNumber}
+                onChange={(e) =>
+                  setDonorNumber(
+                    e.target.value.replace(/[^0-9]/g, "").slice(0, 15)
+                  )
+                }
                 className="flex-col space-y-2"
               />
               <Input
@@ -109,6 +130,7 @@ const Donate = () => {
                 label="Pesan"
                 placeholder="Masukkan Pesan"
                 isRequired="false"
+                maxLength="200"
                 value={donationMessage}
                 onChange={(e) => setDonationMessage(e.target.value)}
                 className="flex-col space-y-2"
@@ -137,16 +159,10 @@ const Donate = () => {
 
               <button
                 type="submit"
-                disabled={
-                  isSubmitting || !donationAmount || !donorName || !donorEmail
-                }
+                disabled={isSubmitting || !donationAmount}
                 className={`w-full md:w-32 h-12 rounded-lg font-semibold transition mt-4
                 ${
-                  isSubmitting ||
-                  !donationAmount ||
-                  donationAmount < 1 ||
-                  !donorName ||
-                  !donorEmail
+                  isSubmitting || !donationAmount || donationAmount < 1
                     ? "bg-gray-200 cursor-not-allowed opacity-50"
                     : "bg-secondary-600 hover:bg-secondary-700 cursor-pointer"
                 }`}

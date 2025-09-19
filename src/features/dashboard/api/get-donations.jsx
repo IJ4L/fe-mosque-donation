@@ -23,7 +23,7 @@ export const useDonationById = (id) => {
     queryKey: ["donation", id],
     queryFn: async () => {
       if (!id) return null;
-      const response = await axios.get(`http://localhost:9999/donations/${id}`);
+      const response = await axios.get(`${API_URL}/donations/${id}`);
       return response.data;
     },
     enabled: !!id,

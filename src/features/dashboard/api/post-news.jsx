@@ -9,7 +9,6 @@ export function usePostNews() {
     mutationFn: async (formData) => {
       for (let pair of formData.entries()) {
         if (pair[1] instanceof File) {
-          // File content in formData
         } else {
         }
       }

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { isAuthenticated, getCurrentUser, logoutUser } from "../api/auth.jsx";
 
 const AuthContext = createContext();
@@ -45,13 +45,17 @@ export const AuthProvider = ({ children, navigate }) => {
     }
   };
 
-  const value = {
-    user,
-    isAuth,
-    loading,
-    login,
-    logout,
-  };
+  const value = useMemo(
+    () => ({
+      user,
+      setUser,
+      isAuth,
+      loading,
+      login,
+      logout,
+    }),
+    [user, isAuth, loading]
+  );
 
   return (
     <AuthContext.Provider value={value}>

@@ -1,5 +1,4 @@
 import React from "react";
-import { formatCurrency } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +9,12 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+
+import { formatCurrency } from "@/lib/utils";
+
+function parseRupiah(str) {
+  return str.replace(/[^\d]/g, "");
+}
 
 const PayoutDialog = ({
   isOpen,
@@ -31,15 +36,18 @@ const PayoutDialog = ({
           Cairkan
         </button>
       </DialogTrigger>
-      <DialogContent className="bg-white sm:max-w-md">
+      <DialogContent
+        className="bg-white sm:max-w-md"
+        closeIconClassName="cursor-pointer"
+      >
         <DialogHeader>
           <DialogTitle>Pencairan Dana</DialogTitle>
           <DialogDescription>
             Dana yang tersedia untuk dicairkan:{" "}
             {withdrawableBalance ? formatCurrency(withdrawableBalance) : "Rp 0"}
             <br />
-            <span className="text-xs mt-1 block">
-              Minimal pencairan: Rp 20.000
+            <span className="text-s mt-1 block">
+              Minimal pencairan: <span className="text-red-500">Rp 20.000</span>
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -58,32 +66,38 @@ const PayoutDialog = ({
 
           <div className="space-y-2">
             <label htmlFor="amount" className="text-sm font-medium">
-              Jumlah Pencairan
+              Jumlah Pencairan <span className="text-red-500">*</span>
             </label>
             <input
               id="amount"
-              type="number"
-              value={payoutAmount}
-              onChange={(e) => setPayoutAmount(e.target.value)}
+              type="text"
+              inputMode="numeric"
+              value={payoutAmount ? formatCurrency(Number(payoutAmount)) : ""}
+              onChange={(e) => {
+                const raw = parseRupiah(e.target.value);
+                setPayoutAmount(raw);
+              }}
               placeholder="Masukkan jumlah pencairan (min. Rp 20.000)"
-              className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full mt-2 px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
               required
               min="20000"
               max={withdrawableBalance || 0}
+              autoComplete="off"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-medium">
-              Deskripsi (Opsional)
+              Deskripsi <span className="text-red-500">*</span>
             </label>
             <textarea
               id="description"
               value={payoutDescription}
               onChange={(e) => setPayoutDescription(e.target.value)}
               placeholder="Contoh: Dana untuk renovasi masjid"
-              className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full mt-2 px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
               rows="3"
+              required
             />
           </div>
 
@@ -98,9 +112,21 @@ const PayoutDialog = ({
             </DialogClose>
             <button
               type="submit"
-              disabled={isSubmitting || !payoutAmount}
+              disabled={
+                isSubmitting ||
+                !payoutAmount ||
+                !payoutDescription ||
+                Number(payoutAmount) < 20000 ||
+                (withdrawableBalance > 0 &&
+                  Number(payoutAmount) > withdrawableBalance)
+              }
               className={`cursor-pointer bg-primary-600 text-black px-4 py-2 rounded-lg border-2 border-black-600 font-medium hover:bg-primary-700 transition ${
-                isSubmitting || !payoutAmount
+                isSubmitting ||
+                !payoutAmount ||
+                !payoutDescription ||
+                Number(payoutAmount) < 20000 ||
+                (withdrawableBalance > 0 &&
+                  Number(payoutAmount) > withdrawableBalance)
                   ? "opacity-50 cursor-not-allowed"
                   : ""
               }`}

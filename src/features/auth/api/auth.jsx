@@ -15,7 +15,6 @@ export const getCurrentUser = () => {
     try {
       return JSON.parse(userData);
     } catch (error) {
-
       return null;
     }
   }
@@ -40,8 +39,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: async (credentials) => {
       try {
-
-
         const response = await axios.post(
           `${API_URL}/auth/login`,
           credentials,
@@ -52,8 +49,6 @@ export const useLogin = () => {
             timeout: 10000,
           }
         );
-
-
 
         if (response.data && response.data.message === "Login berhasil") {
           const userData = response.data.data;
@@ -69,11 +64,8 @@ export const useLogin = () => {
           };
         }
 
-
         throw new Error("Format respons server tidak valid");
       } catch (error) {
-
-
         if (error.response) {
           const serverMessage = error.response.data?.message;
 
@@ -81,12 +73,10 @@ export const useLogin = () => {
             serverMessage || "Login gagal. Server menolak permintaan."
           );
         } else if (error.request) {
-
           throw new Error(
             "Tidak dapat terhubung ke server. Periksa koneksi internet Anda."
           );
         } else {
-
           throw new Error(error.message || "Terjadi kesalahan saat login.");
         }
       }

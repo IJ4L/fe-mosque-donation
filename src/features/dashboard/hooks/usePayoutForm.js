@@ -7,9 +7,10 @@ import { formatCurrency } from "@/lib/utils";
 /**
  * Custom hook for managing payout form state and submission
  * @param {Function} refetchBalance - Function to refetch balance data after successful payout
+ * @param {Function} refetchMutations - Function to refetch mutations data after successful payout
  * @returns {Object} Payout form state and handlers
  */
-export function usePayoutForm(refetchBalance) {
+export function usePayoutForm(refetchBalance, refetchMutations) {
   const [isPayoutDialogOpen, setIsPayoutDialogOpen] = useState(false);
   const [payoutAmount, setPayoutAmount] = useState("");
   const [payoutDescription, setPayoutDescription] = useState("");
@@ -23,10 +24,19 @@ export function usePayoutForm(refetchBalance) {
     setPayoutError(null);
     setPayoutSuccess(null);
 
-    // Validate minimum amount
+    // Validate minimum amount and description
     const amount = Number(payoutAmount);
     if (amount < 20000) {
       const errorMsg = "Minimal pencairan dana adalah Rp 20.000";
+      setPayoutError(errorMsg);
+      toast.error(errorMsg);
+      setIsSubmitting(false);
+      return;
+    }
+    
+    // Validate description is provided
+    if (!payoutDescription.trim()) {
+      const errorMsg = "Deskripsi pencairan wajib diisi";
       setPayoutError(errorMsg);
       toast.error(errorMsg);
       setIsSubmitting(false);
@@ -54,9 +64,12 @@ export function usePayoutForm(refetchBalance) {
         description: `Dana sebesar ${formatCurrency(amount)} akan diproses dengan status pending.`,
       });
 
-      refetchBalance(); // Refresh balance data after successful payout
+      // Refresh balance and mutation data
+      refetchBalance();
+      if (refetchMutations) {
+        refetchMutations();
+      }
 
-      // Close dialog after showing success message briefly
       setTimeout(() => {
         setIsPayoutDialogOpen(false);
         setPayoutSuccess(null);
@@ -68,7 +81,6 @@ export function usePayoutForm(refetchBalance) {
         error.response?.data?.message ||
         "Terjadi kesalahan. Silakan coba lagi nanti.";
 
-      // Show error toast and dismiss loading toast
       toast.dismiss(loadingToast);
       toast.error("Gagal melakukan pencairan", {
         description: errorMessage,

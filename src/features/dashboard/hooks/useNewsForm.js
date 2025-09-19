@@ -12,21 +12,18 @@ export function useNewsForm() {
 
   const handleDivClick = () => {
     fileInputRef.current.click();
-  };  
+  };
   const handleImageChange = (e) => {
     const file = e.target?.files?.[0];
     if (file) {
-
       try {
         const objectUrl = URL.createObjectURL(file);
 
         setImagePreview(objectUrl);
       } catch (error) {
-
         toast.error("Error creating image preview");
       }
     } else {
-
     }
   };
 
@@ -38,7 +35,8 @@ export function useNewsForm() {
     setFormValid(hasImage && hasTitle && hasDescription);
   }, [title, description, imagePreview]);
 
-  const { mutate, isLoading, isError, isSuccess } = usePostNews();  const handleSubmit = (e) => {
+  const { mutate, isLoading, isError, isSuccess } = usePostNews();
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!fileInputRef.current || !fileInputRef.current.files[0]) {
@@ -54,57 +52,52 @@ export function useNewsForm() {
     if (!description.trim()) {
       toast.error("Silakan masukkan deskripsi berita");
       return;
-    }    
-      toast.loading("Menambahkan berita...");    
-    
+    }
+    toast.loading("Menambahkan berita...");
+
     const formData = new FormData();
-    
+
     try {
-      if (!fileInputRef.current || !fileInputRef.current.files || fileInputRef.current.files.length === 0) {
+      if (
+        !fileInputRef.current ||
+        !fileInputRef.current.files ||
+        fileInputRef.current.files.length === 0
+      ) {
         throw new Error("File tidak ditemukan");
       }
-      
+
       const file = fileInputRef.current.files[0];
-      
+
       if (!file || file.size === 0) {
         throw new Error("File rusak atau kosong");
       }
-      
-      if (!file.type.startsWith('image/')) {
+
+      if (!file.type.startsWith("image/")) {
         throw new Error("File bukan gambar. Silakan pilih gambar yang valid");
       }
-      
 
-      
-      const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, '_');
+      const cleanFileName = file.name.replace(/[^\w\s\-\.]/g, "_");
       const cleanedFile = new File([file], cleanFileName, { type: file.type });
-      
+
       formData.append("newsImage", cleanedFile);
-      
+
       formData.append("newsName", title.trim());
       formData.append("newsDescription", description.trim());
       formData.append("newsAuthor", "1");
-      
-      
     } catch (error) {
-
       toast.dismiss();
       toast.error("Gagal menyiapkan data: " + error.message);
       return;
     }
-    
 
     for (let pair of formData.entries()) {
       if (pair[1] instanceof File) {
-
       } else {
-
       }
     }
-    
+
     mutate(formData, {
       onSuccess: (data) => {
-
         toast.dismiss();
         toast.success("Berita berhasil ditambahkan!");
         setOpen(false);
@@ -116,15 +109,14 @@ export function useNewsForm() {
         }
       },
       onError: (error) => {
-
         if (error.response) {
-
-
-
         }
         toast.dismiss();
         toast.error(
-          "Gagal menambahkan berita: " + (error.response?.data?.message || error.message || "Silakan coba lagi")
+          "Gagal menambahkan berita: " +
+            (error.response?.data?.message ||
+              error.message ||
+              "Silakan coba lagi")
         );
       },
     });

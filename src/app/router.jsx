@@ -8,12 +8,10 @@ import Login from "@/features/auth/components/login";
 import { AuthProvider } from "@/features/auth/context/AuthContext";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
 
-// Use a more HMR-friendly way of lazy loading components
 const LandingLayout = lazy(
   () => import("../components/layouts/landing_layout")
 );
 
-// Root layout with AuthProvider
 const RootLayout = () => {
   return (
     <AuthProvider>
@@ -22,7 +20,6 @@ const RootLayout = () => {
   );
 };
 
-// Create routes array for easier configuration
 const routes = [
   {
     element: <RootLayout />,
@@ -52,5 +49,4 @@ const routes = [
   },
 ];
 
-// Create router with routes
 export const router = createBrowserRouter(routes);

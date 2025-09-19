@@ -2,6 +2,9 @@ import React from "react";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useMutation } from "../hooks/useMutation";
+import { useMutationSummary } from "../api/get-summary";
+import { usePayoutForm } from "../hooks/usePayoutForm";
+import PayoutDialog from "./PayoutDialog";
 import MutationItemSkeleton from "@/components/ui/skeletons/MutationItemSkeleton";
 import PaginationSkeleton from "@/components/ui/skeletons/PaginationSkeleton";
 
@@ -10,6 +13,7 @@ const Mutation = () => {
     data,
     isLoading,
     error,
+    refetchMutations,
     summaryData,
     isSummaryLoading,
     summaryError,
@@ -22,6 +26,25 @@ const Mutation = () => {
     renderPaginationSkeleton,
     calculateSummary,
   } = useMutation();
+
+  const {
+    data: summaryDataDirect,
+    isLoading: isSummaryLoadingDirect,
+    refetch: refetchSummaryDirect,
+  } = useMutationSummary();
+
+  const {
+    isPayoutDialogOpen,
+    setIsPayoutDialogOpen,
+    payoutAmount,
+    setPayoutAmount,
+    payoutDescription,
+    setPayoutDescription,
+    isSubmitting,
+    payoutError,
+    payoutSuccess,
+    handlePayoutSubmit,
+  } = usePayoutForm(refetchSummaryDirect, refetchMutations);
 
   const summary = calculateSummary();
   return (
@@ -60,7 +83,7 @@ const Mutation = () => {
           )}
         </div>
         <div className="bg-secondary-600 border-2 border-black-600 rounded-lg px-6 py-4 shadow-md">
-          <p>Selisih</p>
+          <p>Saldo</p>
           {isSummaryLoading ? (
             <div className="w-full flex justify-end items-end">
               <div className="h-8 bg-secondary-500 rounded w-1/2 animate-pulse"></div>
@@ -70,9 +93,9 @@ const Mutation = () => {
               Error
             </p>
           ) : (
-            <p className="text-3xl w-full flex justify-end items-end">
-              {formatCurrency(summary.difference)}
-            </p>
+            <div className="flex flex-col items-end">
+              <p className="text-3xl">{formatCurrency(summary.balance)}</p>
+            </div>
           )}
         </div>
       </div>

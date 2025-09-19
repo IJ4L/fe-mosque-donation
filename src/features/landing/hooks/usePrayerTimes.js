@@ -8,7 +8,6 @@ import {
 } from "../api/prayer-times.jsx";
 
 export const usePrayerTimes = () => {
-  // Initialize with current date instead of empty string
   const now = new Date();
   const options = { day: "numeric", month: "long", year: "numeric" };
   const formattedDate = now.toLocaleDateString("en-US", options);
@@ -33,10 +32,8 @@ export const usePrayerTimes = () => {
       if (data?.date) {
         setCurrentDate(data.date);
       }
-      // We no longer need the fallback here since we set it initially
     },
     onError: () => {
-      // We no longer need this fallback since we set the date initially
 
     }
   });
@@ -73,7 +70,6 @@ export const usePrayerTimes = () => {
     };
   }, [prayerTimes]);
   
-  // Set initial time value immediately to avoid loading state
   useEffect(() => {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, "0");

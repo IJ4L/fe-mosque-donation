@@ -8,11 +8,9 @@ import compressionPlugin from 'vite-plugin-compression'
 export default defineConfig({
   plugins: [
     react({
-      // Add specific configurations for React plugin to improve HMR
       fastRefresh: true,
       babel: {
         plugins: [],
-        // Ensure consistent component exports for better HMR
         parserOpts: {
           plugins: ['jsx']
         }
@@ -20,11 +18,11 @@ export default defineConfig({
     }), 
     tailwindcss(),
     compressionPlugin({
-      algorithm: 'gzip', // Use gzip compression
-      ext: '.gz', // Output file extension
-      threshold: 10240, // Only compress files larger than 10kb
-      deleteOriginFile: false, // Keep the original file
-      filter: /\.(js|css|html|svg)$/i, // Only compress specific file types
+      algorithm: 'gzip', 
+      ext: '.gz',
+      threshold: 10240,
+      deleteOriginFile: false,
+      filter: /\.(js|css|html|svg)$/i,
     })
   ],
   resolve: {
@@ -33,7 +31,6 @@ export default defineConfig({
     },
   },
   build: {
-    // Enable minification and compression
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -41,7 +38,6 @@ export default defineConfig({
         drop_debugger: true,
       }
     },
-    // Split chunks for better caching
     rollupOptions: {
       output: {
         manualChunks: {
@@ -51,9 +47,12 @@ export default defineConfig({
         }
       }
     },
-    // Generate source maps only for production debugging if needed
     sourcemap: false,
-    // Reduce chunk size warnings
     chunkSizeWarningLimit: 1000
+  },
+  server: {
+    allowedHosts: [
+      '75cf139aac93.ngrok-free.app'
+    ],
   }
 })

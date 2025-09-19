@@ -1,4 +1,4 @@
-import Dashboard from "@/features/dashboard/components/dashboard";
+import { Dashboard } from "../../features/dashboard/components/dashboard";
 import Mutation from "@/features/dashboard/components/mutation";
 import NewsAdmin from "@/features/dashboard/components/news";
 import Profile from "@/features/dashboard/components/profile";
@@ -11,6 +11,7 @@ import { useState } from "react";
 const DashboardLayout = () => {
   const [section, setSection] = useState("Dashboard");
   const { user } = useAuth();
+  const [profileRefresh, setProfileRefresh] = useState(0);
   const {
     title,
     setTitle,
@@ -33,11 +34,17 @@ const DashboardLayout = () => {
     setSection(newSection);
     window.scrollTo(0, 0);
   }
+
+  const handleProfileUpdated = () => {
+    setProfileRefresh((prev) => prev + 1);
+  };
   return (
     <div className="flex flex-col min-h-screen">
       <DashboardNavigation
+        key={profileRefresh}
         onSectionChange={handleSectionChange}
         activeSection={section}
+        profileRefresh={profileRefresh}
       />
       <div className="flex-grow mx-4 md:mx-12 lg:mx-24 xl:mx-48 2xl:mx-96 pt-20">
         {section === "News" && (
@@ -54,7 +61,9 @@ const DashboardLayout = () => {
           {section === "Dashboard" && <Dashboard />}
           {section === "Mutation" && <Mutation />}
           {section === "News" && <NewsAdmin />}
-          {section === "Profile" && <Profile />}
+          {section === "Profile" && (
+            <Profile onProfileUpdated={handleProfileUpdated} />
+          )}
         </div>
       </div>
 

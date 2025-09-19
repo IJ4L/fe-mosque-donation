@@ -13,19 +13,14 @@ const Footer = () => {
             </div>
           </div>
           <p className="w-80 text-white mt-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. ea libero.
+            "اللهم اجعلنا من عُمّار المساجد" (Ya Allah, jadikanlah kami termasuk
+            orang-orang yang memakmurkan masjid)
           </p>
           <div>
             <ul className="flex space-x-2 mt-4">
               <li className="bg-orange-400 p-2 rounded-md cursor-pointer hover:scale-110 transform transition duration-300">
                 <InstagramLogoIcon />
               </li>
-              {/* <li className="bg-orange-400 p-2 rounded-md cursor-pointer hover:scale-110 transform transition duration-300">
-                <InstagramLogoIcon />
-              </li>
-              <li className="bg-orange-400 p-2 rounded-md cursor-pointer hover:scale-110 transform transition duration-300">
-                <InstagramLogoIcon />
-              </li> */}
             </ul>
           </div>
         </div>

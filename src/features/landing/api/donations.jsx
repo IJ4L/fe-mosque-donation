@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { queryClient } from "@/lib/queryClient";
+import { API_URL } from "@/config/env";
 
 /**
  * Submit a donation to the API
@@ -14,19 +15,14 @@ export const submitDonation = async (donationData) => {
       params.append(key, donationData[key]);
     });
 
-    const response = await axios.post(
-      "http://localhost:9999/donations",
-      params,
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/donations`, params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
 
     return response.data;
   } catch (error) {
-
     if (error.response) {
       throw new Error(
         error.response.data.message || "Server error during donation submission"
@@ -48,12 +44,8 @@ export const submitDonation = async (donationData) => {
 export const useDonationSubmit = () => {
   return useMutation({
     mutationFn: submitDonation,
-    onSuccess: (data) => {
-
-    },
-    onError: (error) => {
-
-    },
+    onSuccess: (data) => {},
+    onError: (error) => {},
     retry: 2,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
@@ -64,18 +56,14 @@ export const fetchTopDonations = async () => {
     try {
       const response = await axios.get("http://localhost:9999/donations/top");
 
-
-
       if (response.data && Array.isArray(response.data.data)) {
         return response.data.data;
       } else if (Array.isArray(response.data)) {
         return response.data;
       } else {
-
         throw new Error("Unexpected response structure");
       }
     } catch (apiError) {
-
       return [
         {
           donationID: 1,
@@ -105,7 +93,6 @@ export const fetchTopDonations = async () => {
       ];
     }
   } catch (error) {
-
     throw new Error("Failed to fetch top donations");
   }
 };
@@ -145,24 +132,19 @@ export const useTopDonations = () => {
         donationAmount: "3000000.00",
       },
     ],
-    onError: (error) => {
-
-    },
+    onError: (error) => {},
     select: (data) => {
       if (Array.isArray(data)) {
         return data;
-      }
-      else if (data && Array.isArray(data.data)) {
+      } else if (data && Array.isArray(data.data)) {
         return data.data;
       } else {
-
         return [];
       }
     },
   });
 };
 
-// Default export with all functions
 export default {
   submitDonation,
   useDonationSubmit,

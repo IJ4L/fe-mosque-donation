@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useMutations } from '../api/get-mutations';
 import { useMutationSummary } from '../api/get-summary';
+import { API_URL } from '@/config/env';
 
 export function useMutation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const { data, isLoading, error } = useMutations(currentPage, limit);
+  const { data, isLoading, error, refetch: refetchMutations } = useMutations(currentPage, limit);
   const { data: summaryData, isLoading: isSummaryLoading, error: summaryError } = useMutationSummary();
   
   const handleNextPage = () => {
@@ -25,7 +26,7 @@ export function useMutation() {
   };
 
   const handleExportExcel = () => {
-    window.open('http://localhost:9999/mutations/excel', '_blank');
+    window.open(`${API_URL}/mutations/excel`, '_blank');
   };
 
   const renderMutationSkeletons = () => {
@@ -42,9 +43,9 @@ export function useMutation() {
   const calculateSummary = () => {
     if (summaryData && summaryData.data) {
       return {
-        income: summaryData.data.income,
-        expense: summaryData.data.spending,
-        difference: summaryData.data.balance
+        income: summaryData.data.income || 0,
+        expense: summaryData.data.spending || 0,
+        balance: summaryData.data.balance || 0
       };
     }
     
@@ -52,7 +53,7 @@ export function useMutation() {
       return {
         income: 0,
         expense: 0,
-        difference: 0
+        balance: 0
       };
     }
 
@@ -70,13 +71,14 @@ export function useMutation() {
     return {
       income,
       expense,
-      difference: income - expense
+      balance: income - expense
     };
   };
   return {
     data,
     isLoading,
     error,
+    refetchMutations,
     summaryData,
     isSummaryLoading,
     summaryError,

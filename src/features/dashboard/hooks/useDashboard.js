@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDonations } from '../api/get-donations';
+import { API_URL } from '@/config/env';
 
 export function useDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +42,7 @@ export function useDashboard() {
   };
 
   const handleExportExcel = () => {
-    window.open('http://localhost:9999/donations/excel', '_blank');
+    window.open(`${API_URL}/donations/excel`, '_blank');
   };
   const renderDonationSkeletons = () => {
     return Array.from({ length: limit }, (_, index) => ({

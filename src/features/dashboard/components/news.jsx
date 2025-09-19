@@ -62,9 +62,6 @@ const NewsAdmin = () => {
         <div className="flex flex-col space-y-4">
           <NewsItemSkeleton />
           <NewsItemSkeleton />
-          <NewsItemSkeleton />
-          <NewsItemSkeleton />
-          <NewsItemSkeleton />
           <PaginationSkeleton />
         </div>
       ) : error ? (
@@ -82,9 +79,9 @@ const NewsAdmin = () => {
               key={newsItem.newsID}
               className="flex flex-col md:flex-row space mb-4 space-y-2 md:space-y-0 md:space-x-4"
             >
-              <div className="md:w-1/2 w-full object-cover h-40 md:h-60 rounded-lg aspect-video">
+              <div className="md:w-1/2 w-full object-cover mb-4 lg:mb-0 rounded-lg aspect-video">
                 <img
-                  className="object-cover rounded-lg aspect-video"
+                  className="object-center w-full h-full rounded-lg aspect-video"
                   src={formatImageUrl(newsItem.newsImage)}
                   alt={newsItem.newsName}
                   onError={(e) =>
@@ -284,33 +281,72 @@ const NewsAdmin = () => {
       </Sheet>
 
       <Sheet open={openDetailSheet} onOpenChange={setOpenDetailSheet}>
-        <SheetContent className="bg-white h-screen" side={"bottom"}>
-          <SheetHeader className="h-1/5 flex justify-center items-center">
-            <SheetTitle className="font-semibold text-2xl">
+        <SheetContent
+          className="bg-white h-screen overflow-y-auto"
+          side={"bottom"}
+        >
+          <button
+            onClick={() => setOpenDetailSheet(false)}
+            className="rounded-lg absolute top-4 right-4 size-10 flex items-center justify-center bg-primary-600 hover:bg-primary-700 cursor-pointer z-10 border-2 border-black-600 transition-all duration-300 shadow-md"
+            style={{ cursor: "pointer" }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18"
+                stroke="#000"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 6L18 18"
+                stroke="#000"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+
+          <SheetHeader className="flex justify-center items-center">
+            <SheetTitle className="font-semibold text-xl md:text-2xl">
               Berita Terkini
             </SheetTitle>
-            <SheetDescription>
+            <SheetDescription className="text-sm md:text-base">
               Berita terkini terkait mesjid ibnu sina
             </SheetDescription>
           </SheetHeader>
           {viewingNews && viewingNews.data && (
-            <div className="flex items-center justify-around h-full w-full bg-black-600 rounded-t-4xl p-6">
-              <div className="size-96 bg-white rounded-lg overflow-hidden">
-                {" "}
-                <img
-                  src={formatImageUrl(viewingNews.data.newsImage)}
-                  alt={viewingNews.data.newsName}
-                  className="w-full h-full object-cover"
-                  onError={handleImageError}
-                />
+            <div className="flex flex-col h-full xl:flex-row items-center gap-6 md:gap-10 lg:gap-16 w-full bg-black p-5 md:p-8 lg:p-10 shadow-xl overflow-hidden">
+              <div className="w-full sm:w-4/5 md:w-2/5 lg:w-full xl:w-1/4 max-w-md md:max-w-none bg-white overflow-hidden md:mb-0 shadow-lg flex-shrink-0">
+                <div className="relative h-full w-full pt-[75%] md:pt-[70%] lg:pt-[65%] rounded-lg overflow-hidden">
+                  <img
+                    src={formatImageUrl(viewingNews.data.newsImage)}
+                    alt={viewingNews.data.newsName}
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                    onError={handleImageError}
+                    loading="eager"
+                  />
+                </div>
               </div>
-              <div className="flex flex-col w-3/5">
-                <h4 className="text-white text-3xl font-semibold">
+
+              <div className="flex flex-col w-full md:w-3/5 lg:w-full xl:w-3/4 mt-2 md:mt-0 px-2 md:px-6 lg:px-8 overflow-hidden h-full">
+                <h4 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
                   {viewingNews.data.newsName}
                 </h4>
-                <p className="text-white mt-4">
-                  {viewingNews.data.newsDescription}
-                </p>
+                <div className="h-1 w-24 md:w-32 bg-primary-600 my-4"></div>
+
+                <div className="overflow-y-auto pr-2 md:pr-4 flex-grow scrollbar-thin scrollbar-thumb-primary-600 scrollbar-track-transparent hover:scrollbar-thumb-primary-700">
+                  <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed md:leading-loose text-start">
+                    {viewingNews.data.newsDescription}
+                  </p>
+                </div>
               </div>
             </div>
           )}

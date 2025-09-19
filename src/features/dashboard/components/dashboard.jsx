@@ -7,6 +7,7 @@ import DonationItemSkeleton from "@/components/ui/skeletons/DonationItemSkeleton
 import PaginationSkeleton from "@/components/ui/skeletons/PaginationSkeleton";
 import { useDashboard } from "../hooks/useDashboard";
 import { useMutationSummary } from "../api/get-summary";
+import { useMutations } from "../api/get-mutations";
 import { usePayoutForm } from "../hooks/usePayoutForm";
 import PayoutDialog from "./PayoutDialog";
 
@@ -31,6 +32,9 @@ const Dashboard = () => {
     refetch: refetchBalance,
   } = useMutationSummary();
 
+  // Get refetchMutations function to refresh donation data
+  const { refetch: refetchDonations } = useMutations(currentPage, limit);
+
   const {
     isPayoutDialogOpen,
     setIsPayoutDialogOpen,
@@ -42,7 +46,7 @@ const Dashboard = () => {
     payoutError,
     payoutSuccess,
     handlePayoutSubmit,
-  } = usePayoutForm(refetchBalance);
+  } = usePayoutForm(refetchBalance, refetchDonations);
 
   return (
     <>
@@ -51,7 +55,7 @@ const Dashboard = () => {
         <div className="flex items-center px-4 md:px-12 gap-3 w-full md:w-1/2 py-4 md:py-2 bg-primary-600 border-2 border-black-600 rounded-lg">
           {" "}
           <div className="flex flex-col gap-2 md:gap-4">
-            <div className="font-regular text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center md:text-start">
+            <div className="font-regular text-3xl md:text-3xl lg:text-4xl text-center md:text-start">
               {isBalanceLoading ? (
                 <div className="h-10 bg-primary-500 rounded w-32 animate-pulse"></div>
               ) : balanceData?.data?.balance ? (
@@ -60,9 +64,9 @@ const Dashboard = () => {
                 "Rp 0"
               )}
             </div>
-            <div className="text-center md:text-start text-xs sm:text-sm md:text-base">
-              Angka di atas adalah total saldo kamu. Setiap transaksi harus
-              menunggu 1 hari untuk bisa dicairkan.
+            <div className="text-center md:text-start text-xs mx-14 sm:mx-22 md:mx-0 sm:text-sm md:text-base">
+              Angka di atas adalah total saldo kamu. Yang bisa kamu bisa cairkan
+              1 kali setiap pencairan.
             </div>
           </div>
           <img
@@ -74,7 +78,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-center px-12 gap-3 w-full md:w-1/2 py-6 bg-secondary-700 border-2 border-black-600 rounded-lg">
           {" "}
           <div className="flex flex-col gap-4">
-            <div className="font-regular text-xl sm:text-2xl md:text-3xl lg:text-4xl">
+            <div className="text-center md:text-start font-regular text-3xl lg:text-4xl">
               {isBalanceLoading ? (
                 <div className="h-10 bg-secondary-500 rounded w-32 animate-pulse"></div>
               ) : balanceData?.data?.withdrawableBalance ? (
@@ -127,11 +131,9 @@ const Dashboard = () => {
             Export
           </button>{" "}
         </div>{" "}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-4">
           {isLoading ? (
-            renderDonationSkeletons().map((skeleton) => (
-              <DonationItemSkeleton key={skeleton.id} />
-            ))
+            <DonationItemSkeleton />
           ) : error ? (
             <div className="col-span-full text-center p-4 bg-red-100 text-red-800 rounded-lg">
               Error: Gagal memuat data donasi. Silakan coba lagi nanti.
@@ -147,29 +149,36 @@ const Dashboard = () => {
             data.data.donations.map((donation) => (
               <div
                 key={donation.donationID}
-                className="flex justify-between gap-6 bg-gray-100 border-2 border-black-600 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
+                className="md:flex justify-between gap-6 bg-gray-100 border-2 border-black-600 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
               >
                 <div>
                   <p>Donasi</p>
-                  <h5 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl 2xl:text-5xl font-regular">
+                  <h5 className="text-3xl text-center md:text-start md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-medium">
                     {formatCurrency(donation.donationAmount).replace("Rp", "")}
                   </h5>
-                  <p className="text-sm mt-3">
-                    {formatDate(donation.createdAt)}
-                  </p>
-                  <p className="text-xs sm:text-sm">
-                    {formatTime(donation.createdAt)}
-                  </p>
+                  <div className="flex justify-between md:justify-start md:flex-col gap-2 md:gap-0 items-center md:items-start mt-2">
+                    <p className="text-sm">
+                      {formatDate(donation.createdAt, "short")}
+                    </p>
+                    <p className="text-sm">{formatTime(donation.createdAt)}</p>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="font-medium text-sm sm:text-base md:text-lg">
+                <div className="md:hidden w-full h-px bg-black my-3"></div>
+                <div className="flex flex-col gap-0.5 w-full max-w-full overflow-hidden">
+                  <h5 className="font-medium text-sm sm:text-base md:text-lg w-full max-w-full overflow-hidden text-ellipsis">
                     {donation.donaturName}
                   </h5>
-                  <h5 className="text-xs sm:text-sm">
-                    {donation.donaturEmail}
+                  <h5 className="text-xs sm:text-sm w-full max-w-full overflow-hidden text-ellipsis">
+                    {donation.phoneNumber != "-"
+                      ? donation.phoneNumber
+                      : "Nomer Kosong"}
                   </h5>
-                  <h5 className="text-xs sm:text-sm md:text-base italic">
-                    "{donation.donaturMessage || "Tidak ada pesan"}"
+                  <h5 className="text-xs sm:text-sm md:text-base italic w-full max-w-full overflow-hidden break-words line-clamp-2">
+                    "
+                    {donation.donaturMessage != "-"
+                      ? donation.donaturMessage
+                      : "Tidak ada pesan"}
+                    "
                   </h5>
                 </div>
               </div>
@@ -260,4 +269,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export { Dashboard };

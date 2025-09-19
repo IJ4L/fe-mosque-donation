@@ -17,60 +17,17 @@ const News = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: apiNewsItems, isLoading, error } = useNewsLanding(4);
 
-  const fallbackNewsItems = [
-    {
-      id: 1,
-      date: "July, 07 2025",
-      title: "A Miracle Of The Qur'an: Mother's Milk",
-      summary:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, similique quas voluptatum, possimus a reiciendis porro, consequuntur corporis aperiam iste molestias!",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, similique quas voluptatum, possimus a reiciendis porro, consequuntur corporis aperiam iste molestias! Nesciunt porro ratione non repellendus, assumenda illum ipsum ullam.",
-      image: "/images/default-news-1.jpg",
-    },
-    {
-      id: 2,
-      date: "April, 14 2025",
-      title: "The Importance of Ramadan",
-      summary:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      image: "/images/default-news-2.jpg",
-    },
-    {
-      id: 3,
-      date: "March, 20 2025",
-      title: "Community Service Event",
-      summary:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      image: "/images/default-news-3.jpg",
-    },
-    {
-      id: 4,
-      date: "February, 15 2025",
-      title: "New Mosque Expansion Project",
-      summary:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-      image: "/images/default-news-4.jpg",
-    },
-  ];
+  const fallbackNewsItems = [];
 
   const formatNewsDate = (dateString) => {
     try {
       const date = parseISO(dateString);
       return format(date, "MMMM, dd yyyy");
     } catch (error) {
-
       return dateString;
     }
   };
 
-  // Transform API data to component format or use fallback
   const newsItems = apiNewsItems
     ? apiNewsItems.map((news) => ({
         id: news.newsID,
@@ -158,7 +115,9 @@ const News = () => {
                         {news.date}
                       </p>
                       <p className="font-medium pb-1">{news.title}</p>
-                      <p className="w-60 text-justify pb-1 line-clamp-2">{news.summary}</p>
+                      <p className="w-60 text-justify pb-1 line-clamp-2">
+                        {news.summary}
+                      </p>
                       <Sheet>
                         <button
                           className="font-medium underline cursor-pointer hover:text-primary-700"

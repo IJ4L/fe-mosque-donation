@@ -6,9 +6,9 @@ import donationsApi, { useDonationSubmit } from "../api/donations.jsx";
  * @returns {Object} Donation form state and handlers
  */
 export const useDonationForm = () => {
-  const [donationAmount, setDonationAmount] = useState(0);
+  const [donationAmount, setDonationAmount] = useState("");
   const [donorName, setDonorName] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
+  const [donorNumber, setDonorNumber] = useState("");
   const [donationMessage, setDonationMessage] = useState("");
   const [error, setError] = useState(null);
   const [successInfo, setSuccessInfo] = useState(null);
@@ -18,9 +18,9 @@ export const useDonationForm = () => {
   const isSubmitting = donationMutation.isPending;
 
   const resetForm = () => {
-    setDonationAmount(0);
+    setDonationAmount("");
     setDonorName("");
-    setDonorEmail("");
+    setDonorNumber("");
     setDonationMessage("");
     if (formRef.current) {
       formRef.current.reset();
@@ -30,7 +30,8 @@ export const useDonationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!donationAmount || donationAmount < 1 || !donorName || !donorEmail) {
+    if (!donationAmount || Number(donationAmount) < 1000) {
+      setError("Donasi minimum adalah Rp 1.000");
       return;
     }
 
@@ -42,15 +43,11 @@ export const useDonationForm = () => {
         donationDeduction: 1,
         donationType: 1,
         donaturName: donorName,
-        donaturEmail: donorEmail,
+        donaturNumber: donorNumber,
         donaturMessage: donationMessage || "",
       };
 
-
-
       const response = await donationMutation.mutateAsync(donationData);
-
-
 
       if (response.data && response.data.redirect) {
         setSuccessInfo({
@@ -68,7 +65,6 @@ export const useDonationForm = () => {
         resetForm();
       }
     } catch (err) {
-
       setError(err.message || "Gagal membuat donasi. Silahkan coba lagi.");
     }
   };
@@ -78,8 +74,8 @@ export const useDonationForm = () => {
     setDonationAmount,
     donorName,
     setDonorName,
-    donorEmail,
-    setDonorEmail,
+    donorNumber,
+    setDonorNumber,
     donationMessage,
     setDonationMessage,
     error,

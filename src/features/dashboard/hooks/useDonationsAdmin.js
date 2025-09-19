@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDonations } from '../api/get-donations';
+import { API_URL } from '@/config/env';
 
 export function useDonationsAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,7 +31,7 @@ export function useDonationsAdmin() {
   };
   
   const handleExportExcel = () => {
-    window.open('http://localhost:9999/donations/excel', '_blank');
+    window.open(`${API_URL}/donations/excel`, '_blank');
   };
   
   const formatDate = (dateString) => {

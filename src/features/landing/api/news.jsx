@@ -1,3 +1,4 @@
+import { API_URL } from "@/config/env";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -8,60 +9,17 @@ import axios from "axios";
  */
 export const fetchNews = async (limit = 4) => {
   try {
-    const response = await axios.get(
-      `http://localhost:9999/news?page=1&limit=${limit}`
-    );
-
-
+    const response = await axios.get(`${API_URL}/news?page=1&limit=${limit}`);
 
     if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     } else if (Array.isArray(response.data)) {
       return response.data;
     } else {
-
       throw new Error("Unexpected news response structure");
     }
   } catch (error) {
-
-    return [
-      {
-        newsID: 1,
-        newsImage: "/images/default-news-1.jpg",
-        newsName: "A Miracle Of The Qur'an: Mother's Milk",
-        newsDescription:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, similique quas voluptatum, possimus a reiciendis porro, consequuntur corporis aperiam iste molestias!",
-        createdAt: "2025-07-07T12:00:00.000Z",
-        updatedAt: "2025-07-07T12:00:00.000Z",
-      },
-      {
-        newsID: 2,
-        newsImage: "/images/default-news-2.jpg",
-        newsName: "The Importance of Ramadan",
-        newsDescription:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-        createdAt: "2025-04-14T12:00:00.000Z",
-        updatedAt: "2025-04-14T12:00:00.000Z",
-      },
-      {
-        newsID: 3,
-        newsImage: "/images/default-news-3.jpg",
-        newsName: "Community Service Event",
-        newsDescription:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-        createdAt: "2025-03-20T12:00:00.000Z",
-        updatedAt: "2025-03-20T12:00:00.000Z",
-      },
-      {
-        newsID: 4,
-        newsImage: "/images/default-news-4.jpg",
-        newsName: "New Mosque Expansion Project",
-        newsDescription:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita nisi tenetur voluptate rem veniam quaerat fuga ea, dicta dolorem vero ab hic, nam aliquid.",
-        createdAt: "2025-02-15T12:00:00.000Z",
-        updatedAt: "2025-02-15T12:00:00.000Z",
-      },
-    ];
+    console.log(error);
   }
 };
 
@@ -78,9 +36,7 @@ export const useNewsLanding = (limit = 4) => {
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 2,
-    onError: (error) => {
-
-    },
+    onError: (error) => {},
   });
 };
 

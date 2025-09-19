@@ -1,5 +1,13 @@
-﻿import { Input } from "@/components/ui/input";
+﻿// Reset password fields
+const handleCancelPassword = () => {
+  setOldPassword("");
+  setNewPassword("");
+  setShowOldPassword(false);
+  setShowNewPassword(false);
+};
+import { Input } from "@/components/ui/input";
 import { useProfile } from "../api/get-profile";
+import { useAuth } from "@/features/auth/context/AuthContext";
 import { useUpdateProfile } from "../api/update-profile";
 import { useUpdatePassword } from "../api/update-password";
 import { useEffect, useState } from "react";
@@ -7,7 +15,7 @@ import { toast } from "sonner";
 import { EyeIcon } from "lucide-react";
 import { EyeClosedIcon } from "@radix-ui/react-icons";
 
-const Profile = () => {
+const Profile = ({ onProfileUpdated }) => {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [originalUsername, setOriginalUsername] = useState("");
@@ -25,6 +33,7 @@ const Profile = () => {
     username !== originalUsername || phone !== originalPhone;
 
   const { data, isLoading, error } = useProfile();
+  const { setUser } = useAuth();
   const updateProfileMutation = useUpdateProfile();
   const updatePasswordMutation = useUpdatePassword();
 
@@ -40,7 +49,6 @@ const Profile = () => {
   const handleUpdateProfile = () => {
     setIsEditing(true);
     toast.loading("Memperbarui profil...");
-
     updateProfileMutation.mutate(
       {
         username: username,
@@ -48,13 +56,33 @@ const Profile = () => {
         userId: userId,
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.dismiss();
           toast.success("Profil berhasil diperbarui!");
           setIsEditing(false);
-
           setOriginalUsername(username);
           setOriginalPhone(phone);
+          // Fetch the latest user data from backend and update context/localStorage
+          try {
+            const res = await fetch(
+              "/api/auth/user?forceRefresh=" + Date.now()
+            );
+            const fresh = await res.json();
+            if (fresh && fresh.data) {
+              setUser({ ...fresh.data });
+              localStorage.setItem(
+                "mosque_user_data",
+                JSON.stringify(fresh.data)
+              );
+              // Update local state with latest user data
+              setUsername(fresh.data.username || "");
+              setPhone(fresh.data.phoneNumber || "");
+              setUserId(fresh.data.userID || 1);
+              setOriginalUsername(fresh.data.username || "");
+              setOriginalPhone(fresh.data.phoneNumber || "");
+            }
+          } catch {}
+          if (onProfileUpdated) onProfileUpdated();
         },
         onError: (error) => {
           toast.dismiss();
@@ -100,13 +128,20 @@ const Profile = () => {
       {
         onSuccess: (data) => {
           toast.dismiss();
-          toast.success("Password berhasil diperbarui!");
-          setIsUpdatingPassword(false);
-
-          setOldPassword("");
-          setNewPassword("");
-          setShowOldPassword(false);
-          setShowNewPassword(false);
+          toast.success("Profil berhasil diperbarui!");
+          setIsEditing(false);
+          setOriginalUsername(username);
+          setOriginalPhone(phone);
+          // Use the updated values directly to avoid backend delay
+          setUser((prev) => {
+            const newUser = {
+              ...prev,
+              username: username,
+              phoneNumber: phone,
+            };
+            localStorage.setItem("mosque_user_data", JSON.stringify(newUser));
+            return newUser;
+          });
         },
         onError: (error) => {
           toast.dismiss();
@@ -115,12 +150,6 @@ const Profile = () => {
         },
       }
     );
-  };
-  const handleCancelPassword = () => {
-    setOldPassword("");
-    setNewPassword("");
-    setShowOldPassword(false);
-    setShowNewPassword(false);
   };
 
   return (
@@ -144,7 +173,7 @@ const Profile = () => {
         ) : (
           <>
             <div className="flex flex-col gap-2">
-              <h5 className="font-medium text-lg">Nama pengurus mesjid</h5>
+              <h5 className="font-medium text-lg">Username</h5>
               <Input
                 value={username}
                 className="border-2 border-black-600 rounded-lg"
